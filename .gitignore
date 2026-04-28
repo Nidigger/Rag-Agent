@@ -6,6 +6,9 @@ dist/
 wheels/
 *.egg-info
 
+# Environment
+.env
+
 # Virtual environments
 .venv
 /logs/agent_2026-04-18.log
@@ -19,8 +22,6 @@ wheels/
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/Rag-Agent项目.iml
-/pyproject.toml
 /.idea/vcs.xml
-/uv.lock
 /agent/chroma_db/chroma.sqlite3
 /chroma_db/chroma.sqlite3

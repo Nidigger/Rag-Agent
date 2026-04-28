@@ -1,0 +1,260 @@
+2026-04-29 00:06:22,599 - rag-agent.agent_tools - WARNING - agent_tools.py:92 - [fetch_external_data] 未检索到用户：9999在2099-01的使用记录
+2026-04-29 00:06:22,615 - rag-agent.chat_api - ERROR - chat.py:83 - Unexpected stream error: model failed
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 56, in event_generator
+    async for chunk in chat_service.stream_chat(
+    ...<7 lines>...
+        }
+  File "D:\pythonProject\Rag-Agent\tests\test_chat.py", line 77, in error_gen
+    raise RuntimeError("model failed")
+RuntimeError: model failed
+2026-04-29 00:13:00,017 - rag-agent.agent_tools - WARNING - agent_tools.py:92 - [fetch_external_data] 未检索到用户：9999在2099-01的使用记录
+2026-04-29 00:13:00,034 - rag-agent.chat_api - ERROR - chat.py:83 - Unexpected stream error: model failed
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 56, in event_generator
+    async for chunk in chat_service.stream_chat(
+    ...<7 lines>...
+        }
+  File "D:\pythonProject\Rag-Agent\tests\test_chat.py", line 77, in error_gen
+    raise RuntimeError("model failed")
+RuntimeError: model failed
+2026-04-29 00:24:21,250 - rag-agent.agent_tools - WARNING - agent_tools.py:92 - [fetch_external_data] 未检索到用户：9999在2099-01的使用记录
+2026-04-29 00:24:21,297 - rag-agent.chat_api - ERROR - chat.py:83 - Unexpected stream error: model failed
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 56, in event_generator
+    async for chunk in chat_service.stream_chat(
+    ...<7 lines>...
+        }
+  File "D:\pythonProject\Rag-Agent\tests\test_chat.py", line 77, in error_gen
+    raise RuntimeError("model failed")
+RuntimeError: model failed
+2026-04-29 00:52:12,873 - rag-agent.agent_tools - WARNING - agent_tools.py:99 - [fetch_external_data] 未检索到用户：9999在2099-01的使用记录
+2026-04-29 00:52:12,879 - rag-agent.chat_api - ERROR - chat.py:96 - Unexpected stream error: MockChatService.stream_chat() got an unexpected keyword argument 'messages'
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 63, in event_generator
+    async for chunk in chat_service.stream_chat(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^
+        query=req.message, session_id=session_id, messages=history_for_agent
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+TypeError: MockChatService.stream_chat() got an unexpected keyword argument 'messages'
+2026-04-29 00:52:12,882 - rag-agent.chat_api - ERROR - chat.py:96 - Unexpected stream error: MockChatService.stream_chat() got an unexpected keyword argument 'messages'
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 63, in event_generator
+    async for chunk in chat_service.stream_chat(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^
+        query=req.message, session_id=session_id, messages=history_for_agent
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+TypeError: MockChatService.stream_chat() got an unexpected keyword argument 'messages'
+2026-04-29 00:52:13,003 - rag-agent.errors - ERROR - errors.py:115 - Unhandled exception: MockChatService.stream_chat() got an unexpected keyword argument 'messages'
+  + Exception Group Traceback (most recent call last):
+  |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_utils.py", line 81, in collapse_excgroups
+  |     yield
+  |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 192, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |                ~~~~~~~~~~~~~~~~~~~~~~~^^
+  |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 799, in __aexit__
+  |     raise BaseExceptionGroup(
+  |         "unhandled errors in a TaskGroup", self._exceptions
+  |     ) from None
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    |     await self.app(scope, receive, _send)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\cors.py", line 88, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    |     with recv_stream, send_stream, collapse_excgroups():
+    |                                    ~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    |     raise exc
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\pythonProject\Rag-Agent\app\core\middleware.py", line 15, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    |     with recv_stream, send_stream, collapse_excgroups():
+    |                                    ~~~~~~~~~~~~~~~~~~^^
+    |   File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\contextlib.py", line 162, in __exit__
+    |     self.gen.throw(value)
+    |     ~~~~~~~~~~~~~~^^^^^^^
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    |     raise exc
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\pythonProject\Rag-Agent\app\core\middleware.py", line 23, in dispatch
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    |     raise app_exc from app_exc.__cause__ or app_exc.__context__
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    |     await route.handle(scope, receive, send)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    |     await self.app(scope, receive, send)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ...<3 lines>...
+    |     )
+    |     ^
+    |   File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 28, in chat
+    |     async for chunk in chat_service.stream_chat(
+    |                        ~~~~~~~~~~~~~~~~~~~~~~~~^
+    |         query=req.message, session_id=session_id, messages=history
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |     ):
+    |     ^
+    | TypeError: MockChatService.stream_chat() got an unexpected keyword argument 'messages'
+    +------------------------------------
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\cors.py", line 88, in __call__
+    await self.app(scope, receive, send)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\pythonProject\Rag-Agent\app\core\middleware.py", line 15, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\pythonProject\Rag-Agent\app\core\middleware.py", line 23, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\fastapi\routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\fastapi\routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "D:\pythonProject\Rag-Agent\.venv\Lib\site-packages\fastapi\routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 28, in chat
+    async for chunk in chat_service.stream_chat(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^
+        query=req.message, session_id=session_id, messages=history
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+TypeError: MockChatService.stream_chat() got an unexpected keyword argument 'messages'
+2026-04-29 00:52:13,123 - rag-agent.chat_api - ERROR - chat.py:96 - Unexpected stream error: test_chat_stream_error_event.<locals>.error_gen() got an unexpected keyword argument 'messages'
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 63, in event_generator
+    async for chunk in chat_service.stream_chat(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^
+        query=req.message, session_id=session_id, messages=history_for_agent
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+TypeError: test_chat_stream_error_event.<locals>.error_gen() got an unexpected keyword argument 'messages'
+2026-04-29 00:52:55,511 - rag-agent.agent_tools - WARNING - agent_tools.py:99 - [fetch_external_data] 未检索到用户：9999在2099-01的使用记录
+2026-04-29 00:52:55,540 - rag-agent.chat_api - ERROR - chat.py:96 - Unexpected stream error: model failed
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 63, in event_generator
+    async for chunk in chat_service.stream_chat(
+    ...<8 lines>...
+        }
+  File "D:\pythonProject\Rag-Agent\tests\test_chat.py", line 77, in error_gen
+    raise RuntimeError("model failed")
+RuntimeError: model failed
+2026-04-29 00:55:36,794 - rag-agent.agent_tools - WARNING - agent_tools.py:99 - [fetch_external_data] 未检索到用户：9999在2099-01的使用记录
+2026-04-29 00:55:36,819 - rag-agent.chat_api - ERROR - chat.py:96 - Unexpected stream error: model failed
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 63, in event_generator
+    async for chunk in chat_service.stream_chat(
+    ...<8 lines>...
+        }
+  File "D:\pythonProject\Rag-Agent\tests\test_chat.py", line 77, in error_gen
+    raise RuntimeError("model failed")
+RuntimeError: model failed
