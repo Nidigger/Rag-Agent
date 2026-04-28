@@ -1,0 +1,24 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+/logs/agent_2026-04-18.log
+/logs/agent_2026-04-28.log
+/rag/chroma_db/d71b50e9-3f81-412d-91d7-58fe44446711/data_level0.bin
+/rag/chroma_db/d71b50e9-3f81-412d-91d7-58fe44446711/header.bin
+/rag/chroma_db/d71b50e9-3f81-412d-91d7-58fe44446711/length.bin
+/rag/chroma_db/d71b50e9-3f81-412d-91d7-58fe44446711/link_lists.bin
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/Rag-Agent项目.iml
+/pyproject.toml
+/.idea/vcs.xml
+/uv.lock
