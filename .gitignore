@@ -22,3 +22,5 @@ wheels/
 /pyproject.toml
 /.idea/vcs.xml
 /uv.lock
+/agent/chroma_db/chroma.sqlite3
+/chroma_db/chroma.sqlite3
