@@ -5,7 +5,7 @@ from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from app.core.config import settings
-from app.integrations.dashscope_client import get_embed_model
+from app.integrations.llm_client import get_embed_model
 from app.utils.file_handler import (
     get_file_md5_hex,
     listdir_with_allowed_type,
@@ -20,24 +20,24 @@ logger = logging.getLogger("rag-agent.vector_store")
 class VectorStoreService:
     def __init__(self):
         self.vector_store = Chroma(
-            collection_name=settings.CHROMA_COLLECTION_NAME,
+            collection_name=settings.chroma.collection_name,
             embedding_function=get_embed_model(),
-            persist_directory=get_abs_path(settings.CHROMA_PERSIST_DIR),
+            persist_directory=get_abs_path(settings.chroma.persist_directory),
         )
         self.splitter = RecursiveCharacterTextSplitter(
-            chunk_size=settings.CHUNK_SIZE,
-            chunk_overlap=settings.CHUNK_OVERLAP,
-            separators=settings.CHROMA_SEPARATORS,
+            chunk_size=settings.chroma.chunk_size,
+            chunk_overlap=settings.chroma.chunk_overlap,
+            separators=settings.chroma.separators,
             length_function=len,
         )
 
     def get_retriever(self):
         return self.vector_store.as_retriever(
-            search_kwargs={"k": settings.CHROMA_K}
+            search_kwargs={"k": settings.chroma.k}
         )
 
     def load_document(self):
-        md5_store_path = get_abs_path(settings.MD5_HEX_STORE)
+        md5_store_path = get_abs_path(settings.chroma.md5_hex_store)
 
         def check_md5_hex(md5_hex: str) -> bool:
             if not os.path.exists(md5_store_path):
@@ -60,8 +60,8 @@ class VectorStoreService:
             return []
 
         allowed_files = listdir_with_allowed_type(
-            get_abs_path(settings.DATA_DIR),
-            tuple(settings.ALLOWED_FILE_TYPES),
+            get_abs_path(settings.chroma.data_path),
+            tuple(settings.chroma.allow_knowledge_file_type),
         )
 
         for path in allowed_files:

@@ -21,3 +21,22 @@ class ErrorResponse(BaseModel):
     error_code: str
     message: str
     request_id: str | None = None
+
+
+class AgentExecutionResult(BaseModel):
+    """Result from the Agent tool-orchestration phase.
+
+    Attributes:
+        final_draft: The last AIMessage content produced by the Agent,
+            intended as a draft for the streaming phase to refine.
+        tool_context: Concatenated ToolMessage contents collected during
+            execution, providing factual context for the final answer.
+        used_tools: Names of tools invoked during this execution.
+        messages: Full message history from the Agent run, useful for
+            debugging and auditing.
+    """
+
+    final_draft: str
+    tool_context: str
+    used_tools: list[str]
+    messages: list

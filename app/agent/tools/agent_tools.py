@@ -1,3 +1,10 @@
+"""Agent tools — capabilities available to the ReAct Agent.
+
+Each tool is a LangChain @tool-decorated function that the Agent can
+invoke during its reasoning loop. Tools have access to the per-request
+context (user_id, month, report flag) via request_context module.
+"""
+
 import csv
 import logging
 import os
@@ -23,6 +30,7 @@ user_ids = [
 
 
 def _get_rag_service() -> RagSummarizeService:
+    """Lazy-initialize the RAG service singleton."""
     global _rag_service
     if _rag_service is None:
         _rag_service = RagSummarizeService()
@@ -31,11 +39,15 @@ def _get_rag_service() -> RagSummarizeService:
 
 @tool(description="从向量存储中检索参考资料")
 def rag_summarize(query: str) -> str:
+    """Query the vector store for relevant document chunks."""
+    logger.info("[tool] rag_summarize: query=%r", query[:80])
     return _get_rag_service().rag_summarize(query)
 
 
 @tool(description="获取指定城市的天气，以消息字符串的形式返回")
 def get_weather(city: str) -> str:
+    """Return simulated weather data for the given city."""
+    logger.info("[tool] get_weather: city=%s", city)
     return (
         f"城市{city}天气为晴天，气温26摄氏度，空气湿度50%，"
         f"南风1级，AQI21，最近6小时降雨概率极低"
@@ -44,34 +56,47 @@ def get_weather(city: str) -> str:
 
 @tool(description="获取用户所在城市的名称，以纯字符串形式返回")
 def get_user_location() -> str:
-    return random.choice(["深圳", "合肥", "杭州"])
+    """Return a simulated user location."""
+    location = random.choice(["深圳", "合肥", "杭州"])
+    logger.info("[tool] get_user_location: %s", location)
+    return location
 
 
 @tool(description="获取用户的ID，以纯字符串形式返回")
 def get_user_id() -> str:
+    """Return the user ID from request context, or a random one."""
     ctx = get_request_context()
     if ctx.get("user_id"):
+        logger.info("[tool] get_user_id: %s (from context)", ctx["user_id"])
         return ctx["user_id"]
-    return random.choice(user_ids)
+    uid = random.choice(user_ids)
+    logger.info("[tool] get_user_id: %s (random)", uid)
+    return uid
 
 
 @tool(description="获取当前月份，以纯字符串形式返回")
 def get_current_month() -> str:
+    """Return the current month from context or system clock."""
     ctx = get_request_context()
     if ctx.get("month"):
+        logger.info("[tool] get_current_month: %s (from context)", ctx["month"])
         return ctx["month"]
-    return datetime.now().strftime("%Y-%m")
+    month = datetime.now().strftime("%Y-%m")
+    logger.info("[tool] get_current_month: %s (system)", month)
+    return month
 
 
 def _generate_external_data():
+    """Load external CSV data into memory (lazy, once)."""
     global external_data
     if external_data:
         return
 
-    path = get_abs_path(settings.EXTERNAL_DATA_PATH)
+    path = get_abs_path(settings.rag.external_data_path)
     if not os.path.exists(path):
         raise FileNotFoundError(f"外部数据文件{path}不存在")
 
+    logger.info("[tool] Loading external data from: %s", path)
     with open(path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
@@ -85,6 +110,9 @@ def _generate_external_data():
                 "耗材": row["耗材"],
                 "对比": row["对比"],
             }
+    logger.info(
+        "[tool] External data loaded: %d users", len(external_data)
+    )
 
 
 @tool(
@@ -92,13 +120,21 @@ def _generate_external_data():
     "以纯字符串形式返回，如果未检索到返回空字符串"
 )
 def fetch_external_data(user_id: str, month: str) -> str:
+    """Fetch usage records for a user in a given month from CSV data."""
     _generate_external_data()
     try:
-        return str(external_data[user_id][month])
+        result = str(external_data[user_id][month])
+        logger.info(
+            "[tool] fetch_external_data: user=%s, month=%s, found",
+            user_id,
+            month,
+        )
+        return result
     except KeyError:
         logger.warning(
-            f"[fetch_external_data] "
-            f"未检索到用户：{user_id}在{month}的使用记录"
+            "[tool] fetch_external_data: user=%s, month=%s, not found",
+            user_id,
+            month,
         )
         return ""
 
@@ -108,4 +144,6 @@ def fetch_external_data(user_id: str, month: str) -> str:
     "动态注入上下文信息，为后续提示词切换提供上下文信息"
 )
 def fill_context_for_report():
+    """Signal middleware to switch to the report system prompt."""
+    logger.info("[tool] fill_context_for_report: report mode activated")
     return "fill_context_for_report已调用"

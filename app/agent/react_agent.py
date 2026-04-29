@@ -1,6 +1,18 @@
+"""ReAct Agent — Phase 1: Non-streaming tool orchestration.
+
+This module is responsible ONLY for the agent phase:
+- Determining which tools to call
+- Executing RAG, weather, external data queries, etc.
+- Collecting results into an AgentExecutionResult
+
+It does NOT produce SSE output. The streaming of the final answer
+is handled by FinalAnswerStreamer (Phase 2).
+"""
+
 import logging
 
 from langchain.agents import create_agent
+from langchain_core.messages import AIMessage, ToolMessage
 
 from app.agent.tools.agent_tools import (
     fetch_external_data,
@@ -16,20 +28,27 @@ from app.agent.tools.middleware import (
     monitor_tool,
     report_prompt_switch,
 )
-from app.integrations.dashscope_client import get_chat_model
+from app.integrations.llm_client import get_agent_model
+from app.schemas.common import AgentExecutionResult
 from app.utils.prompt_loader import load_system_prompts
 
 logger = logging.getLogger("rag-agent.react_agent")
 
 
 class ReactAgent:
+    """ReAct Agent that orchestrates tool calls without streaming.
+
+    Uses a non-streaming OpenAI-compatible model to ensure tool call
+    arguments are always complete, valid JSON.
+    """
+
     def __init__(self):
         self._agent = None
 
     def _ensure_agent(self):
         if self._agent is None:
             self._agent = create_agent(
-                model=get_chat_model(),
+                model=get_agent_model(),
                 system_prompt=load_system_prompts(),
                 tools=[
                     rag_summarize,
@@ -44,12 +63,23 @@ class ReactAgent:
             )
             logger.info("[ReactAgent] agent initialized")
 
-    def execute_stream(
+    def execute(
         self,
         query: str,
         context: dict | None = None,
         messages: list | None = None,
-    ):
+    ) -> AgentExecutionResult:
+        """Run the full Agent loop and return structured results.
+
+        Args:
+            query: The user's message.
+            context: Runtime context dict (e.g. {"report": True, "user_id": "1001"}).
+            messages: Prior conversation history for multi-turn support.
+
+        Returns:
+            AgentExecutionResult containing the draft answer, collected
+            tool context, tool names used, and full message history.
+        """
         self._ensure_agent()
         if context is None:
             context = {"report": False}
@@ -58,13 +88,77 @@ class ReactAgent:
         # Keep last 10 messages (5 rounds) to avoid prompt overflow
         if len(history) > 10:
             history = history[-10:]
+
         input_dict = {
             "messages": [*history, {"role": "user", "content": query}]
         }
 
-        for chunk in self._agent.stream(
-            input_dict, stream_mode="values", context=context
-        ):
-            latest_message = chunk["messages"][-1]
-            if latest_message.content:
-                yield latest_message.content.strip() + "\n"
+        logger.info(
+            "[ReactAgent] Starting execution: query=%r, context=%s, "
+            "history_len=%d",
+            query[:80],
+            context,
+            len(history),
+        )
+
+        # Non-streaming: let the Agent run all tool calls to completion
+        final_state = self._agent.invoke(
+            input_dict, context=context
+        )
+
+        all_messages = final_state.get("messages", [])
+
+        # Collect tool context and used tool names
+        tool_context_parts: list[str] = []
+        used_tools: list[str] = []
+
+        for msg in all_messages:
+            if isinstance(msg, ToolMessage):
+                tool_context_parts.append(msg.content)
+                tool_name = getattr(msg, "name", None)
+                if tool_name and tool_name not in used_tools:
+                    used_tools.append(tool_name)
+
+        tool_context = "\n".join(tool_context_parts)
+
+        # Find the final AIMessage (last one without tool_calls)
+        final_draft = ""
+        for msg in reversed(all_messages):
+            if isinstance(msg, AIMessage):
+                if not getattr(msg, "tool_calls", None):
+                    final_draft = _message_content_to_text(msg.content).strip()
+                    break
+
+        logger.info(
+            "[ReactAgent] Execution complete: used_tools=%s, "
+            "draft_len=%d, tool_context_len=%d",
+            used_tools,
+            len(final_draft),
+            len(tool_context),
+        )
+
+        return AgentExecutionResult(
+            final_draft=final_draft,
+            tool_context=tool_context,
+            used_tools=used_tools,
+            messages=all_messages,
+        )
+
+
+def _message_content_to_text(content) -> str:
+    """Normalize AIMessage.content (str or list[dict]) to plain text."""
+    if isinstance(content, str):
+        return content
+
+    if isinstance(content, list):
+        parts: list[str] = []
+        for item in content:
+            if isinstance(item, str):
+                parts.append(item)
+            elif isinstance(item, dict):
+                text = item.get("text")
+                if isinstance(text, str):
+                    parts.append(text)
+        return "".join(parts)
+
+    return str(content)

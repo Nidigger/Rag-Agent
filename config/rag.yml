@@ -1,2 +1,2 @@
-chat_model_name: qwen3-max
-embedding_model_name: text-embedding-v4
+# RAG data sources
+external_data_path: data/external/records.csv

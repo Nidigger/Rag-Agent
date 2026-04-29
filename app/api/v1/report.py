@@ -1,3 +1,10 @@
+"""Report API endpoint — SSE streaming report generation.
+
+Uses the two-phase architecture:
+1. Agent executes tools (non-streaming) to gather data.
+2. Report is streamed token-by-token to the client via SSE.
+"""
+
 import json
 import logging
 
@@ -16,11 +23,19 @@ router = APIRouter()
 
 @router.post("/stream")
 async def report_stream(req: ReportRequest):
+    """SSE streaming report generation endpoint.
+
+    Events emitted:
+    - event: message  → data: {"content": "..."}
+    - event: done     → data: {"session_id": "..."}
+    - event: error    → data: {"code": "...", "message": "..."}
+    """
     report_service = get_report_service()
     session_service = get_session_service()
 
     session_id = req.session_id or session_service.create_session()
 
+    # Build the natural-language query from request parameters
     if req.user_id and req.month:
         query = f"请为用户{req.user_id}生成{req.month}的扫地机器人使用报告"
     elif req.user_id:
@@ -29,6 +44,13 @@ async def report_stream(req: ReportRequest):
         query = f"请生成{req.month}的使用报告"
     else:
         query = "给我生成我的使用报告"
+
+    logger.info(
+        "[report/stream] SSE request: session=%s, user_id=%s, month=%s",
+        session_id,
+        req.user_id,
+        req.month,
+    )
 
     async def event_generator():
         try:
@@ -46,11 +68,19 @@ async def report_stream(req: ReportRequest):
                     ),
                 }
 
+            logger.info(
+                "[report/stream] SSE done: session=%s", session_id
+            )
+
             yield {
                 "event": "done",
                 "data": json.dumps({"session_id": session_id}),
             }
         except AgentGenerationError:
+            logger.error(
+                "[report/stream] Report generation failed: session=%s",
+                session_id,
+            )
             yield {
                 "event": "error",
                 "data": json.dumps(
@@ -63,7 +93,10 @@ async def report_stream(req: ReportRequest):
             }
         except Exception as e:
             logger.error(
-                f"Report stream error: {e}", exc_info=True
+                "[report/stream] Unexpected error: session=%s, %s",
+                session_id,
+                e,
+                exc_info=True,
             )
             yield {
                 "event": "error",

@@ -1,3 +1,12 @@
+"""FastAPI application factory.
+
+Creates and configures the application with:
+- Logging setup
+- CORS and timing middleware
+- Global exception handlers
+- API v1 routes
+"""
+
 from fastapi import FastAPI
 
 from app.api.v1.router import api_v1_router
@@ -11,8 +20,8 @@ def create_app() -> FastAPI:
     setup_logging()
 
     app = FastAPI(
-        title=settings.PROJECT_NAME,
-        version=settings.VERSION,
+        title=settings.server.project_name,
+        version=settings.server.version,
         docs_url="/api/docs",
         openapi_url="/api/openapi.json",
     )
@@ -20,7 +29,7 @@ def create_app() -> FastAPI:
     register_middleware(app)
     register_exception_handlers(app)
 
-    app.include_router(api_v1_router, prefix=settings.API_V1_PREFIX)
+    app.include_router(api_v1_router, prefix=settings.server.api_v1_prefix)
 
     return app
 

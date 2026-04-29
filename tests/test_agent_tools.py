@@ -20,11 +20,11 @@ class TestPathResolution:
         assert os.path.isfile(path)
 
     def test_chroma_db_path_resolves(self):
-        path = get_abs_path(settings.CHROMA_PERSIST_DIR)
+        path = get_abs_path(settings.chroma.persist_directory)
         assert os.path.isdir(path)
 
     def test_external_data_path_resolves(self):
-        path = get_abs_path(settings.EXTERNAL_DATA_PATH)
+        path = get_abs_path(settings.rag.external_data_path)
         assert os.path.isfile(path)
 
 

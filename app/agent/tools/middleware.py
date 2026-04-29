@@ -1,3 +1,15 @@
+"""Agent middleware — logging, context injection, and prompt switching.
+
+Middlewares are executed by the LangChain agent framework at specific
+points in the agent loop:
+
+- monitor_tool: wraps every tool call, injects request context,
+  and logs tool invocation results.
+- log_before_model: fires before each LLM call for observability.
+- report_prompt_switch: dynamically selects system prompt based on
+  whether the request is a report generation or a normal chat.
+"""
+
 import logging
 from typing import Callable
 
@@ -27,8 +39,17 @@ def monitor_tool(
     request: ToolCallRequest,
     handler: Callable[[ToolCallRequest], ToolMessage | Command],
 ) -> ToolMessage | Command:
-    logger.info(f"[tool monitor] 执行工具：{request.tool_call['name']}")
-    logger.info(f"[tool monitor] 传入参数：{request.tool_call['args']}")
+    """Wrap every tool call with logging and request-context injection.
+
+    - Injects the runtime context (e.g. user_id, month, report flag)
+      into thread-local storage so tools can access it.
+    - Logs the tool name, arguments, and result status.
+    - Sets context["report"] = True when fill_context_for_report is called,
+      which triggers the report system prompt in subsequent LLM calls.
+    """
+    tool_name = request.tool_call["name"]
+    tool_args = request.tool_call["args"]
+    logger.info("[middleware] Tool call: %s(%s)", tool_name, tool_args)
 
     # Inject runtime context into thread-local so tools can read it
     ctx = dict(request.runtime.context)
@@ -36,15 +57,19 @@ def monitor_tool(
 
     try:
         result = handler(request)
-        logger.info(f"[tool monitor] 工具{request.tool_call['name']}调用成功")
+        logger.info(
+            "[middleware] Tool %s completed successfully", tool_name
+        )
 
-        if request.tool_call["name"] == "fill_context_for_report":
+        # Flag report mode after the context-filling tool is called
+        if tool_name == "fill_context_for_report":
             request.runtime.context["report"] = True
+            logger.debug("[middleware] Report mode activated")
 
         return result
     except Exception as e:
         logger.error(
-            f"工具{request.tool_call['name']}调用失败，原因：{str(e)}"
+            "[middleware] Tool %s failed: %s", tool_name, e, exc_info=True
         )
         raise
     finally:
@@ -53,21 +78,32 @@ def monitor_tool(
 
 @before_model
 def log_before_model(state: AgentState, runtime: Runtime):
+    """Log a summary before each LLM call within the agent loop."""
+    msg_count = len(state["messages"])
+    last_msg = state["messages"][-1]
     logger.info(
-        f"[log_before_model] 即将调用模型，"
-        f"带有{len(state['messages'])}条消息。"
+        "[middleware] Before model: %d messages, last=%s",
+        msg_count,
+        type(last_msg).__name__,
     )
     logger.debug(
-        f"[log_before_model] "
-        f"{type(state['messages'][-1]).__name__} | "
-        f"{state['messages'][-1].content.strip()}"
+        "[middleware] Last message content: %s",
+        last_msg.content.strip()[:200],
     )
     return None
 
 
 @dynamic_prompt
 def report_prompt_switch(request: ModelRequest):
+    """Select the appropriate system prompt based on request context.
+
+    If context["report"] is True (set by the fill_context_for_report tool),
+    use the report-specific prompt. Otherwise, use the standard chat prompt.
+    """
     is_report = request.runtime.context.get("report", False)
+    prompt_type = "report" if is_report else "chat"
+    logger.info("[middleware] Prompt selected: %s", prompt_type)
+
     if is_report:
         return load_report_prompts()
     return load_system_prompts()

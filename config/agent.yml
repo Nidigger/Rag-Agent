@@ -1,1 +1,9 @@
-external_data_path: data/external/records.csv
+# Agent / Model configuration
+chat_model_name: qwen3-max
+embedding_model_name: text-embedding-v4
+
+# OpenAI-compatible endpoint — swap to change provider
+# DashScope:    https://dashscope.aliyuncs.com/compatible-mode/v1
+# SiliconFlow:  https://api.siliconflow.cn/v1
+# DeepSeek:     https://api.deepseek.com/v1
+openai_compatible_base_url: https://dashscope.aliyuncs.com/compatible-mode/v1

@@ -3,7 +3,7 @@ import logging
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 
-from app.integrations.dashscope_client import get_chat_model
+from app.integrations.llm_client import get_agent_model
 from app.rag.vector_store import VectorStoreService
 from app.utils.prompt_loader import load_rag_prompts
 
@@ -17,7 +17,7 @@ class RagSummarizeService:
         self.prompt_template = PromptTemplate.from_template(
             load_rag_prompts()
         )
-        self.model = get_chat_model()
+        self.model = get_agent_model()
         self.chain = (
             self.prompt_template | self.model | StrOutputParser()
         )

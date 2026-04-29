@@ -1,0 +1,16 @@
+INFO:     Started server process [25604]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+2026-04-29 12:45:42,738 - rag-agent.react_agent - INFO - react_agent.py:49 - [ReactAgent] agent initialized
+2026-04-29 12:45:42,740 - rag-agent.middleware - INFO - middleware.py:56 - [log_before_model] 即将调用模型，带有1条消息。
+2026-04-29 12:45:44,712 - rag-agent.react_agent - INFO - react_agent.py:49 - [ReactAgent] agent initialized
+2026-04-29 12:45:44,719 - rag-agent.middleware - INFO - middleware.py:56 - [log_before_model] 即将调用模型，带有1条消息。
+2026-04-29 12:45:47,297 - rag-agent.middleware - INFO - middleware.py:30 - [tool monitor] 执行工具：fetch_external_data
+2026-04-29 12:45:47,306 - rag-agent.middleware - INFO - middleware.py:31 - [tool monitor] 传入参数：{'user_id': '1001', 'month': '2025-06'}
+2026-04-29 12:45:47,306 - rag-agent.middleware - INFO - middleware.py:39 - [tool monitor] 工具fetch_external_data调用成功
+2026-04-29 12:45:47,307 - rag-agent.middleware - INFO - middleware.py:56 - [log_before_model] 即将调用模型，带有3条消息。
+2026-04-29 12:45:50,247 - rag-agent.middleware - INFO - middleware.py:30 - [tool monitor] 执行工具：rag_summarize
+2026-04-29 12:45:50,254 - rag-agent.middleware - INFO - middleware.py:31 - [tool monitor] 传入参数：{'query': '扫地机器人主刷和HEPA滤网保养建议'}
+2026-04-29 12:45:53,716 - rag-agent.middleware - INFO - middleware.py:39 - [tool monitor] 工具rag_summarize调用成功
+2026-04-29 12:45:53,724 - rag-agent.middleware - INFO - middleware.py:56 - [log_before_model] 即将调用模型，带有5条消息。
