@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 
-from app.core.config import settings
+from app.config import settings
 
 
 class RequestIDMiddleware(BaseHTTPMiddleware):

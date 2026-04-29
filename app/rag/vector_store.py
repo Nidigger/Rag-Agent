@@ -4,7 +4,7 @@ import os
 from langchain_chroma import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from app.core.config import settings
+from app.config import settings
 from app.integrations.llm_client import get_embed_model
 from app.utils.file_handler import (
     get_file_md5_hex,

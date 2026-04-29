@@ -1,4 +1,4 @@
-"""Tests for app/core/config.py — YAML-driven configuration.
+"""Tests for app/config — YAML-driven configuration.
 
 Validates that:
 - YAML files are loaded and their values appear in settings.
@@ -16,9 +16,9 @@ from pathlib import Path
 import pytest
 import yaml
 
-from app.core.config import settings
-from app.core.config_loader import _load_yaml, load_settings
-from app.core.config_schema import (
+from app.config import settings
+from app.config.loader import _load_yaml, load_settings
+from app.config.schema import (
     AppSettings,
     ChromaSettings,
     ModelSettings,
@@ -161,7 +161,7 @@ class TestMissingRequiredConfig:
         """
         monkeypatch.delenv("DASHSCOPE_API_KEY", raising=False)
 
-        from app.core.config_loader import _resolve_env
+        from app.config.loader import _resolve_env
 
         dotenv = {}
         api_key = _resolve_env("DASHSCOPE_API_KEY", dotenv)
@@ -306,28 +306,28 @@ class TestTypeConversionHelpers:
     """Verify helper functions handle edge cases correctly."""
 
     def test_resolve_str_list_comma_fallback(self, monkeypatch):
-        from app.core.config_loader import _resolve_str_list
+        from app.config.loader import _resolve_str_list
 
         dotenv = {}
         result = _resolve_str_list("TEST_KEY", dotenv, ["default"])
         assert result == ["default"]
 
     def test_resolve_str_list_json_array(self, monkeypatch):
-        from app.core.config_loader import _resolve_str_list
+        from app.config.loader import _resolve_str_list
 
         dotenv = {"TEST_KEY": '["a","b","c"]'}
         result = _resolve_str_list("TEST_KEY", dotenv)
         assert result == ["a", "b", "c"]
 
     def test_resolve_str_list_json_with_newlines(self):
-        from app.core.config_loader import _resolve_str_list
+        from app.config.loader import _resolve_str_list
 
         dotenv = {"SEP": json.dumps(["\n\n", "\n", " "])}
         result = _resolve_str_list("SEP", dotenv)
         assert result == ["\n\n", "\n", " "]
 
     def test_resolve_bool_accepts_variants(self):
-        from app.core.config_loader import _resolve_bool
+        from app.config.loader import _resolve_bool
 
         assert _resolve_bool("K", {}, "True") is True
         assert _resolve_bool("K", {}, "true") is True

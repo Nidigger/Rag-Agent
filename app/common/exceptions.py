@@ -11,7 +11,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from app.core.response import ErrorCode, error
+from app.common.response import ErrorCode, error
 
 logger = logging.getLogger("rag-agent.errors")
 

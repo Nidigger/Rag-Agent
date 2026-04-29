@@ -14,7 +14,7 @@ from pathlib import Path
 import yaml
 from dotenv import dotenv_values
 
-from app.core.config_schema import (
+from app.config.schema import (
     AppSettings,
     ChromaSettings,
     ModelSettings,
@@ -25,7 +25,7 @@ from app.core.config_schema import (
 
 logger = logging.getLogger("rag-agent.config_loader")
 
-# Resolve project root: config_loader.py -> core -> app -> project root
+# Resolve project root: loader.py -> config -> app -> project root
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _CONFIG_DIR = _PROJECT_ROOT / "config"
 _ENV_FILE = _PROJECT_ROOT / ".env"

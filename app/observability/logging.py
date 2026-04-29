@@ -12,7 +12,7 @@ import logging
 import os
 from datetime import datetime
 
-from app.core.config import settings
+from app.config import settings
 
 DEFAULT_LOG_FORMAT = logging.Formatter(
     "%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s"

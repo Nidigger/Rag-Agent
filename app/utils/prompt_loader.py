@@ -6,7 +6,7 @@ settings.prompts.main_prompt_path, rag_summarize_prompt_path, report_prompt_path
 
 import logging
 
-from app.core.config import settings
+from app.config import settings
 from app.utils.path_tool import get_abs_path
 
 logger = logging.getLogger("rag-agent.prompt_loader")

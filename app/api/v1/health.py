@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.core.response import success
+from app.common.response import success
 
 router = APIRouter()
 

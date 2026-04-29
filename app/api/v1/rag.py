@@ -2,7 +2,7 @@ import logging
 
 from fastapi import APIRouter
 
-from app.core.response import success
+from app.common.response import success
 from app.schemas.rag import RAGQueryRequest
 from app.services.rag_service import rag_query
 

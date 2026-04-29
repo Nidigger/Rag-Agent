@@ -1,7 +1,7 @@
 import logging
 
 from app.rag.retriever import RagSummarizeService
-from app.core.errors import RAGRetrievalError
+from app.common.exceptions import RAGRetrievalError
 
 logger = logging.getLogger("rag-agent.rag_service")
 

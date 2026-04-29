@@ -11,8 +11,8 @@ import logging
 from fastapi import APIRouter
 from sse_starlette.sse import EventSourceResponse
 
-from app.core.errors import AgentGenerationError
-from app.core.response import ErrorCode
+from app.common.exceptions import AgentGenerationError
+from app.common.response import ErrorCode
 from app.schemas.report import ReportRequest
 from app.services.report_service import get_report_service
 from app.services.session_service import get_session_service

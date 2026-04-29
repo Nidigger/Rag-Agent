@@ -14,7 +14,7 @@ from datetime import datetime
 from langchain_core.tools import tool
 
 from app.agent.tools.request_context import get_request_context
-from app.core.config import settings
+from app.config import settings
 from app.rag.retriever import RagSummarizeService
 from app.utils.path_tool import get_abs_path
 

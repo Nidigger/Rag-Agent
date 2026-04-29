@@ -1,6 +1,6 @@
 """Path utilities — resolve project-relative paths."""
 
-from app.core.config import settings
+from app.config import settings
 
 
 def get_project_root() -> str:

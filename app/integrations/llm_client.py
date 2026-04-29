@@ -15,7 +15,7 @@ import logging
 from langchain_community.embeddings import DashScopeEmbeddings
 from langchain_openai import ChatOpenAI
 
-from app.core.config import settings
+from app.config import settings
 
 logger = logging.getLogger("rag-agent.llm_client")
 

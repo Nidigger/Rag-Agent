@@ -12,7 +12,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from app.core.errors import AgentGenerationError
+from app.common.exceptions import AgentGenerationError
 from app.schemas.common import AgentExecutionResult
 
 

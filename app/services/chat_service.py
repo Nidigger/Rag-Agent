@@ -9,7 +9,7 @@ import asyncio
 import logging
 
 from app.agent.react_agent import ReactAgent
-from app.core.errors import AgentGenerationError
+from app.common.exceptions import AgentGenerationError
 from app.services.final_answer_streamer import get_final_answer_streamer
 from app.services.sync_stream import async_wrap_sync_generator
 

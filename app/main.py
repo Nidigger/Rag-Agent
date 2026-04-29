@@ -10,10 +10,10 @@ Creates and configures the application with:
 from fastapi import FastAPI
 
 from app.api.v1.router import api_v1_router
-from app.core.config import settings
-from app.core.errors import register_exception_handlers
-from app.core.logging import setup_logging
-from app.core.middleware import register_middleware
+from app.config import settings
+from app.common.exceptions import register_exception_handlers
+from app.middleware.http import register_middleware
+from app.observability.logging import setup_logging
 
 
 def create_app() -> FastAPI:

@@ -14,7 +14,7 @@ import warnings
 
 from langchain_community.chat_models.tongyi import ChatTongyi
 
-from app.core.config import settings
+from app.config import settings
 
 logger = logging.getLogger("rag-agent.dashscope_client")
 
