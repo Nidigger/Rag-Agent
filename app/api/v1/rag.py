@@ -12,5 +12,9 @@ router = APIRouter()
 
 @router.post("/query")
 async def rag_query_endpoint(req: RAGQueryRequest):
-    result = rag_query(query=req.query, top_k=req.top_k)
+    result = rag_query(
+        query=req.query,
+        top_k=req.top_k,
+        knowledge_base_id=req.knowledge_base_id,
+    )
     return success(data={"query": req.query, "result": result})

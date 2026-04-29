@@ -15,10 +15,14 @@ def get_rag_service() -> RagSummarizeService:
     return _rag_service
 
 
-def rag_query(query: str, top_k: int = 3) -> str:
+def rag_query(query: str, top_k: int = 3, knowledge_base_id: str = "kb_default") -> str:
     try:
         service = get_rag_service()
-        return service.rag_summarize(query)
+        return service.rag_summarize(
+            query=query,
+            top_k=top_k,
+            knowledge_base_id=knowledge_base_id,
+        )
     except Exception as e:
         logger.error(f"RAG query failed: {e}", exc_info=True)
         raise RAGRetrievalError(str(e))

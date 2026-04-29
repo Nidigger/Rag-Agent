@@ -1,10 +1,11 @@
-"""Agent middleware — logging, context injection, and prompt switching.
+"""Agent middleware — logging, context injection, tool events, and prompt switching.
 
 Middlewares are executed by the LangChain agent framework at specific
 points in the agent loop:
 
 - monitor_tool: wraps every tool call, injects request context,
-  and logs tool invocation results.
+  emits tool_start/tool_done events via AgentEventSink, and logs
+  tool invocation results.
 - log_before_model: fires before each LLM call for observability.
 - report_prompt_switch: dynamically selects system prompt based on
   whether the request is a report generation or a normal chat.
@@ -29,6 +30,11 @@ from app.agent.tools.request_context import (
     clear_request_context,
     set_request_context,
 )
+from app.services.stream_events import (
+    get_tool_status_message,
+    tool_done_event,
+    tool_start_event,
+)
 from app.utils.prompt_loader import load_report_prompts, load_system_prompts
 
 logger = logging.getLogger("rag-agent.middleware")
@@ -39,10 +45,11 @@ def monitor_tool(
     request: ToolCallRequest,
     handler: Callable[[ToolCallRequest], ToolMessage | Command],
 ) -> ToolMessage | Command:
-    """Wrap every tool call with logging and request-context injection.
+    """Wrap every tool call with logging, tool events, and request-context injection.
 
     - Injects the runtime context (e.g. user_id, month, report flag)
       into thread-local storage so tools can access it.
+    - Emits tool_start / tool_done events via AgentEventSink when present.
     - Logs the tool name, arguments, and result status.
     - Sets context["report"] = True when fill_context_for_report is called,
       which triggers the report system prompt in subsequent LLM calls.
@@ -55,6 +62,16 @@ def monitor_tool(
     ctx = dict(request.runtime.context)
     set_request_context(ctx)
 
+    # Emit tool_start event via event sink (V2)
+    sink = ctx.get("event_sink")
+    if sink is not None:
+        sink.emit(
+            tool_start_event(
+                tool=tool_name,
+                message=get_tool_status_message(tool_name, "start"),
+            )
+        )
+
     try:
         result = handler(request)
         logger.info(
@@ -65,6 +82,15 @@ def monitor_tool(
         if tool_name == "fill_context_for_report":
             request.runtime.context["report"] = True
             logger.debug("[middleware] Report mode activated")
+
+        # Emit tool_done event via event sink (V2)
+        if sink is not None:
+            sink.emit(
+                tool_done_event(
+                    tool=tool_name,
+                    message=get_tool_status_message(tool_name, "done"),
+                )
+            )
 
         return result
     except Exception as e:

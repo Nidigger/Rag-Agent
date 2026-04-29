@@ -1,0 +1,23 @@
+# Vector store configuration — supports qdrant / chroma
+# Provider: "qdrant" or "chroma"
+provider: qdrant
+
+# Qdrant configuration (used when provider == "qdrant")
+qdrant:
+  url: http://192.168.31.104:6333
+  collection_name: rag_agent_knowledge
+  distance: Cosine
+  vector_size: 1536
+  timeout_seconds: 10
+
+# Document ingest configuration
+ingest:
+  chunk_size: 600
+  chunk_overlap: 80
+  batch_size: 64
+
+# Chroma fallback (used when provider == "chroma")
+chroma:
+  collection_name: agent
+  persist_directory: chroma_db
+  k: 3

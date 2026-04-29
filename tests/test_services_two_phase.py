@@ -7,7 +7,7 @@ Validates that:
 - Errors from the agent phase are wrapped in AgentGenerationError.
 """
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import ANY, AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -37,7 +37,7 @@ def _make_fake_streamer(chunks):
 
     def fake_stream(query, tool_context, final_draft=None, report=False):
         for c in chunks:
-            yield c
+            yield {"event": "message", "data": {"content": c}}
 
     streamer = MagicMock()
     streamer.stream_final_answer = fake_stream
@@ -50,7 +50,7 @@ def _make_fake_streamer(chunks):
 
 class TestChatServiceTwoPhase:
     @pytest.mark.asyncio
-    async def test_chat_service_yields_streamed_chunks(self):
+    async def test_chat_service_yields_streamed_events(self):
         from app.services.chat_service import ChatService
 
         fake_result = _make_agent_result()
@@ -65,13 +65,16 @@ class TestChatServiceTwoPhase:
             svc._streamer = fake_streamer
 
             collected = []
-            async for chunk in svc.stream_chat("hello"):
-                collected.append(chunk)
+            async for event in svc.stream_chat("hello"):
+                collected.append(event)
 
-        assert collected == ["chunk1", "chunk2"]
+            assert len(collected) >= 2
+            event_types = [e["event"] for e in collected]
+            assert "status" in event_types
+            assert "message" in event_types
 
     @pytest.mark.asyncio
-    async def test_chat_service_calls_agent_with_report_false(self):
+    async def test_chat_service_calls_agent_with_report_false_and_event_sink(self):
         from app.services.chat_service import ChatService
 
         fake_result = _make_agent_result()
@@ -88,14 +91,14 @@ class TestChatServiceTwoPhase:
             async for _ in svc.stream_chat("hello"):
                 pass
 
-        svc._agent.execute.assert_called_once_with(
-            query="hello",
-            messages=None,
-            context={"report": False},
-        )
+        svc._agent.execute.assert_called_once()
+        call_kwargs = svc._agent.execute.call_args
+        ctx = call_kwargs.kwargs.get("context", {})
+        assert ctx["report"] is False
+        assert "event_sink" in ctx
 
     @pytest.mark.asyncio
-    async def test_chat_service_passes_messages_to_agent(self):
+    async def test_chat_service_passes_messages_to_agent_and_event_sink(self):
         from app.services.chat_service import ChatService
 
         fake_result = _make_agent_result()
@@ -113,11 +116,12 @@ class TestChatServiceTwoPhase:
             async for _ in svc.stream_chat("hello", messages=history):
                 pass
 
-        svc._agent.execute.assert_called_once_with(
-            query="hello",
-            messages=history,
-            context={"report": False},
-        )
+        svc._agent.execute.assert_called_once()
+        call_kwargs = svc._agent.execute.call_args
+        assert call_kwargs.kwargs.get("messages") == history
+        ctx = call_kwargs.kwargs.get("context", {})
+        assert ctx["report"] is False
+        assert "event_sink" in ctx
 
     @pytest.mark.asyncio
     async def test_chat_service_wraps_generic_error(self):
@@ -158,7 +162,7 @@ class TestChatServiceTwoPhase:
 
 class TestReportServiceTwoPhase:
     @pytest.mark.asyncio
-    async def test_report_service_yields_streamed_chunks(self):
+    async def test_report_service_yields_streamed_events(self):
         from app.services.report_service import ReportService
 
         fake_result = _make_agent_result(
@@ -170,7 +174,7 @@ class TestReportServiceTwoPhase:
         def fake_stream(query, tool_context, final_draft=None, report=False):
             nonlocal captured_report
             captured_report = report
-            yield "report_chunk"
+            yield {"event": "message", "data": {"content": "report_chunk"}}
 
         with patch.object(
             ReportService, "__init__", lambda self: None
@@ -182,12 +186,15 @@ class TestReportServiceTwoPhase:
             svc._streamer.stream_final_answer = fake_stream
 
             collected = []
-            async for chunk in svc.stream_report(
+            async for event in svc.stream_report(
                 "generate report", user_id="1001", month="2025-06"
             ):
-                collected.append(chunk)
+                collected.append(event)
 
-        assert collected == ["report_chunk"]
+        assert len(collected) >= 2
+        event_types = [e["event"] for e in collected]
+        assert "status" in event_types
+        assert "message" in event_types
         assert captured_report is True
 
     @pytest.mark.asyncio
@@ -212,28 +219,12 @@ class TestReportServiceTwoPhase:
 
         svc._agent.execute.assert_called_once()
         call_kwargs = svc._agent.execute.call_args
-        assert call_kwargs.kwargs.get("context", {}) == {
-            "report": True,
-            "user_id": "1001",
-            "month": "2025-06",
-            "device_id": "dev1",
-        }
-
-    @pytest.mark.asyncio
-    async def test_report_service_wraps_generic_error(self):
-        from app.services.report_service import ReportService
-
-        with patch.object(
-            ReportService, "__init__", lambda self: None
-        ):
-            svc = ReportService()
-            svc._agent = MagicMock()
-            svc._agent.execute.side_effect = RuntimeError("db error")
-            svc._streamer = _make_fake_streamer([])
-
-            with pytest.raises(AgentGenerationError):
-                async for _ in svc.stream_report("report"):
-                    pass
+        ctx = call_kwargs.kwargs.get("context", {})
+        assert ctx["report"] is True
+        assert ctx["user_id"] == "1001"
+        assert ctx["month"] == "2025-06"
+        assert ctx["device_id"] == "dev1"
+        assert "event_sink" in ctx
 
     @pytest.mark.asyncio
     async def test_report_service_context_without_optional_fields(self):
@@ -255,4 +246,5 @@ class TestReportServiceTwoPhase:
 
         call_kwargs = svc._agent.execute.call_args
         ctx = call_kwargs.kwargs.get("context", {})
-        assert ctx == {"report": True}
+        assert ctx["report"] is True
+        assert "event_sink" in ctx

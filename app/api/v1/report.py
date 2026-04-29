@@ -3,6 +3,9 @@
 Uses the two-phase architecture:
 1. Agent executes tools (non-streaming) to gather data.
 2. Report is streamed token-by-token to the client via SSE.
+
+The endpoint consumes StreamEvent dicts from ReportService and
+serialises them directly to SSE — no hand-crafted event structures.
 """
 
 import json
@@ -15,6 +18,7 @@ from app.common.exceptions import AgentGenerationError
 from app.common.response import ErrorCode
 from app.schemas.report import ReportRequest
 from app.services.report_service import get_report_service
+from app.services.stream_events import done_event, error_event
 from app.services.session_service import get_session_service
 
 logger = logging.getLogger("rag-agent.report_api")
@@ -26,9 +30,12 @@ async def report_stream(req: ReportRequest):
     """SSE streaming report generation endpoint.
 
     Events emitted:
-    - event: message  → data: {"content": "..."}
-    - event: done     → data: {"session_id": "..."}
-    - event: error    → data: {"code": "...", "message": "..."}
+    - event: status     → data: {"phase": "...", "message": "..."}
+    - event: tool_start → data: {"tool": "...", "message": "..."}
+    - event: tool_done  → data: {"tool": "...", "message": "..."}
+    - event: message    → data: {"content": "..."}
+    - event: done       → data: {"session_id": "..."}
+    - event: error      → data: {"code": "...", "message": "..."}
     """
     report_service = get_report_service()
     session_service = get_session_service()
@@ -54,7 +61,7 @@ async def report_stream(req: ReportRequest):
 
     async def event_generator():
         try:
-            async for chunk in report_service.stream_report(
+            async for event in report_service.stream_report(
                 query=query,
                 session_id=session_id,
                 user_id=req.user_id,
@@ -62,34 +69,30 @@ async def report_stream(req: ReportRequest):
                 device_id=req.device_id,
             ):
                 yield {
-                    "event": "message",
-                    "data": json.dumps(
-                        {"content": chunk}, ensure_ascii=False
-                    ),
+                    "event": event["event"],
+                    "data": json.dumps(event["data"], ensure_ascii=False),
                 }
 
             logger.info(
                 "[report/stream] SSE done: session=%s", session_id
             )
 
+            ev = done_event(session_id)
             yield {
-                "event": "done",
-                "data": json.dumps({"session_id": session_id}),
+                "event": ev["event"],
+                "data": json.dumps(ev["data"], ensure_ascii=False),
             }
         except AgentGenerationError:
             logger.error(
                 "[report/stream] Report generation failed: session=%s",
                 session_id,
             )
+            ev = error_event(
+                ErrorCode.AGENT_GENERATION_FAILED, "报告生成失败，请稍后重试"
+            )
             yield {
-                "event": "error",
-                "data": json.dumps(
-                    {
-                        "code": ErrorCode.AGENT_GENERATION_FAILED,
-                        "message": "报告生成失败，请稍后重试",
-                    },
-                    ensure_ascii=False,
-                ),
+                "event": ev["event"],
+                "data": json.dumps(ev["data"], ensure_ascii=False),
             }
         except Exception as e:
             logger.error(
@@ -98,15 +101,12 @@ async def report_stream(req: ReportRequest):
                 e,
                 exc_info=True,
             )
+            ev = error_event(
+                ErrorCode.INTERNAL_SERVER_ERROR, "服务内部错误"
+            )
             yield {
-                "event": "error",
-                "data": json.dumps(
-                    {
-                        "code": ErrorCode.INTERNAL_SERVER_ERROR,
-                        "message": "服务内部错误",
-                    },
-                    ensure_ascii=False,
-                ),
+                "event": ev["event"],
+                "data": json.dumps(ev["data"], ensure_ascii=False),
             }
 
     return EventSourceResponse(event_generator())

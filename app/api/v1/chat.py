@@ -3,6 +3,9 @@
 Provides two endpoints:
 - POST /         : Synchronous chat (returns complete reply).
 - POST /stream   : SSE streaming chat (token-by-token via two-phase architecture).
+
+The streaming endpoint consumes StreamEvent dicts from ChatService and
+serialises them directly to SSE — no hand-crafted event structures here.
 """
 
 import json
@@ -15,6 +18,7 @@ from app.common.exceptions import AgentGenerationError
 from app.common.response import ErrorCode, success
 from app.schemas.chat import ChatRequest
 from app.services.chat_service import get_chat_service
+from app.services.stream_events import done_event, error_event
 from app.services.session_service import get_session_service
 
 logger = logging.getLogger("rag-agent.chat_api")
@@ -38,10 +42,12 @@ async def chat(req: ChatRequest):
 
     collected_chunks: list[str] = []
     try:
-        async for chunk in chat_service.stream_chat(
+        async for event in chat_service.stream_chat(
             query=req.message, session_id=session_id, messages=history
         ):
-            collected_chunks.append(chunk)
+            # Extract content tokens from message events
+            if event["event"] == "message":
+                collected_chunks.append(event["data"]["content"])
     except AgentGenerationError:
         raise
 
@@ -73,6 +79,7 @@ async def chat_stream(req: ChatRequest):
     2. Final answer is streamed token-by-token to the client via SSE.
 
     Events emitted:
+    - event: status   → data: {"phase": "...", "message": "..."}
     - event: message  → data: {"content": "..."}
     - event: done     → data: {"session_id": "..."}
     - event: error    → data: {"code": "...", "message": "..."}
@@ -96,17 +103,17 @@ async def chat_stream(req: ChatRequest):
     async def event_generator():
         collected_chunks: list[str] = []
         try:
-            async for chunk in chat_service.stream_chat(
+            async for event in chat_service.stream_chat(
                 query=req.message,
                 session_id=session_id,
                 messages=history_for_agent,
             ):
-                collected_chunks.append(chunk)
+                if event["event"] == "message":
+                    collected_chunks.append(event["data"]["content"])
+
                 yield {
-                    "event": "message",
-                    "data": json.dumps(
-                        {"content": chunk}, ensure_ascii=False
-                    ),
+                    "event": event["event"],
+                    "data": json.dumps(event["data"], ensure_ascii=False),
                 }
 
             # Save assistant reply after successful streaming
@@ -120,9 +127,10 @@ async def chat_stream(req: ChatRequest):
                 len(reply),
             )
 
+            ev = done_event(session_id)
             yield {
-                "event": "done",
-                "data": json.dumps({"session_id": session_id}),
+                "event": ev["event"],
+                "data": json.dumps(ev["data"], ensure_ascii=False),
             }
         except AgentGenerationError as e:
             logger.error(
@@ -130,15 +138,12 @@ async def chat_stream(req: ChatRequest):
                 session_id,
                 e,
             )
+            ev = error_event(
+                ErrorCode.AGENT_GENERATION_FAILED, "生成失败，请稍后重试"
+            )
             yield {
-                "event": "error",
-                "data": json.dumps(
-                    {
-                        "code": ErrorCode.AGENT_GENERATION_FAILED,
-                        "message": "生成失败，请稍后重试",
-                    },
-                    ensure_ascii=False,
-                ),
+                "event": ev["event"],
+                "data": json.dumps(ev["data"], ensure_ascii=False),
             }
         except Exception as e:
             logger.error(
@@ -147,15 +152,12 @@ async def chat_stream(req: ChatRequest):
                 e,
                 exc_info=True,
             )
+            ev = error_event(
+                ErrorCode.INTERNAL_SERVER_ERROR, "服务内部错误"
+            )
             yield {
-                "event": "error",
-                "data": json.dumps(
-                    {
-                        "code": ErrorCode.INTERNAL_SERVER_ERROR,
-                        "message": "服务内部错误",
-                    },
-                    ensure_ascii=False,
-                ),
+                "event": ev["event"],
+                "data": json.dumps(ev["data"], ensure_ascii=False),
             }
 
     return EventSourceResponse(event_generator())

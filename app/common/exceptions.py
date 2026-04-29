@@ -86,6 +86,50 @@ class SessionNotFoundError(AppException):
         )
 
 
+class VectorStoreUnavailableError(AppException):
+    """Raised when the vector store is not reachable."""
+
+    def __init__(self, message: str = "Vector store unavailable"):
+        super().__init__(
+            error_code=ErrorCode.VECTOR_STORE_UNAVAILABLE,
+            message=message,
+            status_code=503,
+        )
+
+
+class DocumentNotFoundError(AppException):
+    """Raised when a requested document is not found."""
+
+    def __init__(self, message: str = "Document not found"):
+        super().__init__(
+            error_code=ErrorCode.DOCUMENT_NOT_FOUND,
+            message=message,
+            status_code=404,
+        )
+
+
+class IngestFailedError(AppException):
+    """Raised when document ingestion fails."""
+
+    def __init__(self, message: str = "Document ingestion failed"):
+        super().__init__(
+            error_code=ErrorCode.INGEST_FAILED,
+            message=message,
+            status_code=500,
+        )
+
+
+class UnauthorizedError(AppException):
+    """Raised when an internal API call lacks valid authentication."""
+
+    def __init__(self, message: str = "Unauthorized"):
+        super().__init__(
+            error_code=ErrorCode.UNAUTHORIZED,
+            message=message,
+            status_code=401,
+        )
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     """Register global exception handlers on the FastAPI app."""
 

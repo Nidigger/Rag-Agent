@@ -1,0 +1,805 @@
+2026-04-30 02:05:51,390 - rag-agent - INFO - logging.py:47 - [logging] Logger initialized: level=INFO
+2026-04-30 02:05:51,393 - rag-agent.llm_client - INFO - llm_client.py:77 - [llm_client] Initializing embedding model: text-embedding-v4
+2026-04-30 02:05:51,544 - rag-agent.qdrant_client - INFO - qdrant_client.py:49 - [qdrant_client] Connecting to Qdrant at http://192.168.31.104:6333 (timeout=10s)
+2026-04-30 02:05:51,609 - rag-agent.qdrant_client - INFO - qdrant_client.py:93 - [qdrant_client] Collection 'rag_agent_knowledge' already exists, skipping creation
+2026-04-30 02:05:51,610 - rag-agent.main - INFO - main.py:33 - [main] Qdrant collection 'rag_agent_knowledge' ready
+2026-04-30 02:05:51,662 - rag-agent.agent_tools - INFO - agent_tools.py:99 - [tool] Loading external data from: D:\pythonProject\Rag-Agent\data\external\records.csv
+2026-04-30 02:05:51,662 - rag-agent.agent_tools - INFO - agent_tools.py:113 - [tool] External data loaded: 10 users
+2026-04-30 02:05:51,664 - rag-agent.agent_tools - INFO - agent_tools.py:127 - [tool] fetch_external_data: user=1001, month=2025-01, found
+2026-04-30 02:05:51,665 - rag-agent.agent_tools - WARNING - agent_tools.py:134 - [tool] fetch_external_data: user=9999, month=2099-01, not found
+2026-04-30 02:05:51,666 - rag-agent.agent_tools - INFO - agent_tools.py:85 - [tool] get_current_month: 2026-04 (system)
+2026-04-30 02:05:51,666 - rag-agent.agent_tools - INFO - agent_tools.py:85 - [tool] get_current_month: 2026-04 (system)
+2026-04-30 02:05:51,671 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 70193116-be7c-472f-9f74-49b70b2fa3b5
+2026-04-30 02:05:51,671 - rag-agent.chat_api - INFO - chat.py:97 - [chat/stream] SSE request: session=70193116-be7c-472f-9f74-49b70b2fa3b5, message='你好'
+2026-04-30 02:05:51,671 - rag-agent.chat_api - INFO - chat.py:124 - [chat/stream] SSE done: session=70193116-be7c-472f-9f74-49b70b2fa3b5, reply_len=11
+2026-04-30 02:05:51,674 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 267341ca-f1fe-4995-9c4b-cc8a872e0a59
+2026-04-30 02:05:51,674 - rag-agent.chat_api - INFO - chat.py:97 - [chat/stream] SSE request: session=267341ca-f1fe-4995-9c4b-cc8a872e0a59, message='你好'
+2026-04-30 02:05:51,674 - rag-agent.chat_api - INFO - chat.py:124 - [chat/stream] SSE done: session=267341ca-f1fe-4995-9c4b-cc8a872e0a59, reply_len=6
+2026-04-30 02:05:51,676 - rag-agent.errors - WARNING - exceptions.py:179 - [errors] Validation error: POST /api/v1/chat/stream — [{'type': 'string_too_short', 'loc': ('body', 'message'), 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}]
+2026-04-30 02:05:51,679 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 1f7b638a-aca4-4105-9494-acd106d61ee5
+2026-04-30 02:05:51,679 - rag-agent.chat_api - INFO - chat.py:37 - [chat] Sync request: session=1f7b638a-aca4-4105-9494-acd106d61ee5, message='你好'
+2026-04-30 02:05:51,679 - rag-agent.chat_api - INFO - chat.py:58 - [chat] Sync response: session=1f7b638a-aca4-4105-9494-acd106d61ee5, reply_len=6
+2026-04-30 02:05:51,700 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: b47b329e-f80e-4cb4-9e32-a7027411cefa
+2026-04-30 02:05:51,700 - rag-agent.chat_api - INFO - chat.py:97 - [chat/stream] SSE request: session=b47b329e-f80e-4cb4-9e32-a7027411cefa, message='你好'
+2026-04-30 02:05:51,700 - rag-agent.chat_api - ERROR - chat.py:149 - [chat/stream] Unexpected error: session=b47b329e-f80e-4cb4-9e32-a7027411cefa, model failed
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 106, in event_generator
+    async for event in chat_service.stream_chat(
+    ...<10 lines>...
+        }
+  File "D:\pythonProject\Rag-Agent\tests\test_chat.py", line 87, in error_gen
+    raise RuntimeError("model failed")
+RuntimeError: model failed
+2026-04-30 02:05:51,710 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,713 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3-plus, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,713 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,716 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:9999
+2026-04-30 02:05:51,716 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,719 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,720 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,722 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,723 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,725 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,726 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,728 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,729 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,731 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,732 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,734 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,735 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,737 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,738 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,740 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,741 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,743 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,744 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,747 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,747 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,750 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,750 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,753 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,753 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,756 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,756 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,759 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,759 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,762 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,762 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,765 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,765 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,768 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,768 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:05:51,771 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:05:51,773 - rag-agent.llm_client - INFO - llm_client.py:58 - [llm_client] Initializing streaming model: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, streaming=True
+2026-04-30 02:05:51,960 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:05:51,960 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:05:51,961 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=3, draft_len=5
+2026-04-30 02:05:51,961 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:05:51,962 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:05:51,962 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:05:51,963 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=True, context_len=0, draft_len=0
+2026-04-30 02:05:51,963 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:05:51,964 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:05:51,964 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:05:51,964 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:05:51,964 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:05:51,965 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:05:51,965 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:05:51,988 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:05:51,989 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:05:51,990 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:05:51,991 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:05:51,992 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:05:51,992 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:05:51,996 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:05:52,000 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=FASTAPI_INTERNAL_TOKEN is not configured on server
+2026-04-30 02:05:52,221 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=FASTAPI_INTERNAL_TOKEN is not configured on server
+2026-04-30 02:05:52,236 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=FASTAPI_INTERNAL_TOKEN is not configured on server
+2026-04-30 02:05:52,239 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=FASTAPI_INTERNAL_TOKEN is not configured on server
+2026-04-30 02:05:52,268 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=FASTAPI_INTERNAL_TOKEN is not configured on server
+2026-04-30 02:05:52,274 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=FASTAPI_INTERNAL_TOKEN is not configured on server
+2026-04-30 02:05:52,277 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=FASTAPI_INTERNAL_TOKEN is not configured on server
+2026-04-30 02:05:52,282 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=FASTAPI_INTERNAL_TOKEN is not configured on server
+2026-04-30 02:05:52,287 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=FASTAPI_INTERNAL_TOKEN is not configured on server
+2026-04-30 02:05:52,289 - rag-agent.llm_client - INFO - llm_client.py:35 - [llm_client] Initializing agent model: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, streaming=False
+2026-04-30 02:05:52,294 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:05:52,295 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:05:52,297 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:05:52,298 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:05:52,304 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:05:52,313 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:05:52,314 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:179 - [qdrant_vector_store] Disabled document_id='doc_002'
+2026-04-30 02:05:52,318 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:05:52,318 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:159 - [qdrant_vector_store] Deleted all points for document_id='doc_003'
+2026-04-30 02:05:52,323 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:05:52,323 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:05:52,328 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection'
+2026-04-30 02:05:52,330 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test'
+2026-04-30 02:05:52,333 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:159 - [qdrant_vector_store] Deleted all points for document_id='doc_001'
+2026-04-30 02:05:52,334 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:179 - [qdrant_vector_store] Disabled document_id='doc_001'
+2026-04-30 02:05:52,336 - rag-agent.qdrant_vector_store - ERROR - qdrant_vector_store.py:188 - [qdrant_vector_store] Health check failed: Connection refused
+2026-04-30 02:05:52,338 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='make report', context={'report': True}, history_len=0
+2026-04-30 02:05:52,338 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['fetch_external_data'], draft_len=28, tool_context_len=17
+2026-04-30 02:05:52,338 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='hello', context={'report': False}, history_len=0
+2026-04-30 02:05:52,338 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=[], draft_len=9, tool_context_len=0
+2026-04-30 02:05:52,339 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='check data', context={'report': False}, history_len=0
+2026-04-30 02:05:52,339 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['get_weather'], draft_len=0, tool_context_len=6
+2026-04-30 02:05:52,340 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='hello', context={'report': False}, history_len=0
+2026-04-30 02:05:52,340 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=[], draft_len=9, tool_context_len=0
+2026-04-30 02:05:52,340 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='hello', context={'report': False}, history_len=10
+2026-04-30 02:05:52,340 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=[], draft_len=9, tool_context_len=0
+2026-04-30 02:05:52,341 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='test', context={'report': False}, history_len=0
+2026-04-30 02:05:52,341 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['t1', 't2'], draft_len=4, tool_context_len=15
+2026-04-30 02:05:52,341 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='test', context={'report': False}, history_len=0
+2026-04-30 02:05:52,341 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['get_weather'], draft_len=20, tool_context_len=11
+2026-04-30 02:05:52,346 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 5175ed32-4f88-4846-bef8-82e35b004fae
+2026-04-30 02:05:52,346 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=5175ed32-4f88-4846-bef8-82e35b004fae, user_id=1001, month=2025-06
+2026-04-30 02:05:52,347 - rag-agent.report_api - INFO - report.py:76 - [report/stream] SSE done: session=5175ed32-4f88-4846-bef8-82e35b004fae
+2026-04-30 02:05:52,349 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 17fb9535-201a-4db9-90a4-0f0f8856b50a
+2026-04-30 02:05:52,349 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=17fb9535-201a-4db9-90a4-0f0f8856b50a, user_id=1001, month=2025-06
+2026-04-30 02:05:52,349 - rag-agent.report_api - INFO - report.py:76 - [report/stream] SSE done: session=17fb9535-201a-4db9-90a4-0f0f8856b50a
+2026-04-30 02:05:52,352 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 84f02b2f-d0f0-4a91-83ad-8afaf8a34956
+2026-04-30 02:05:52,352 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=84f02b2f-d0f0-4a91-83ad-8afaf8a34956, user_id=None, month=None
+2026-04-30 02:05:52,352 - rag-agent.report_api - INFO - report.py:76 - [report/stream] SSE done: session=84f02b2f-d0f0-4a91-83ad-8afaf8a34956
+2026-04-30 02:05:52,354 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 904af9f2-c1e5-4da2-956b-ff7ae37aaf54
+2026-04-30 02:05:52,354 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=904af9f2-c1e5-4da2-956b-ff7ae37aaf54, user_id=1001, month=2025-06
+2026-04-30 02:05:52,355 - rag-agent.report_api - ERROR - report.py:98 - [report/stream] Unexpected error: session=904af9f2-c1e5-4da2-956b-ff7ae37aaf54, model failed
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\report.py", line 64, in event_generator
+    async for event in report_service.stream_report(
+    ...<9 lines>...
+        }
+  File "D:\pythonProject\Rag-Agent\tests\test_report.py", line 81, in error_gen
+    raise RuntimeError("model failed")
+RuntimeError: model failed
+2026-04-30 02:05:52,358 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:05:52,859 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:52,861 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='generate report', context={'report': True}
+2026-04-30 02:05:53,362 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:53,385 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello1'
+2026-04-30 02:05:53,385 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello2'
+2026-04-30 02:05:53,890 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:53,890 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:53,893 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:05:53,893 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True}
+2026-04-30 02:05:54,407 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:54,407 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:54,410 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:05:54,410 - rag-agent.chat_service - ERROR - chat_service.py:100 - [ChatService] Agent stream error: threaded agent error
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 71, in stream_chat
+    agent_result = agent_future.result()
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 56, in <lambda>
+    lambda: self._agent.execute(
+            ~~~~~~~~~~~~~~~~~~~^
+        query=query,
+        ^^^^^^^^^^^^
+        messages=messages,
+        ^^^^^^^^^^^^^^^^^^
+        context=context,
+        ^^^^^^^^^^^^^^^^
+    ),
+    ^
+  File "D:\pythonProject\Rag-Agent\tests\test_service_concurrency.py", line 182, in execute
+    raise RuntimeError("threaded agent error")
+RuntimeError: threaded agent error
+2026-04-30 02:05:54,412 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True}
+2026-04-30 02:05:54,413 - rag-agent.report_service - ERROR - report_service.py:121 - [ReportService] Report stream error: threaded agent error
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\services\report_service.py", line 91, in stream_report
+    agent_result = agent_future.result()
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\pythonProject\Rag-Agent\app\services\report_service.py", line 78, in <lambda>
+    lambda: self._agent.execute(query=query, context=context),
+            ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\pythonProject\Rag-Agent\tests\test_service_concurrency.py", line 182, in execute
+    raise RuntimeError("threaded agent error")
+RuntimeError: threaded agent error
+2026-04-30 02:05:54,415 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:05:54,415 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:54,417 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:05:54,417 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:54,419 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:05:54,419 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:54,421 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:05:54,421 - rag-agent.chat_service - ERROR - chat_service.py:100 - [ChatService] Agent stream error: boom
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 71, in stream_chat
+    agent_result = agent_future.result()
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 56, in <lambda>
+    lambda: self._agent.execute(
+            ~~~~~~~~~~~~~~~~~~~^
+        query=query,
+        ^^^^^^^^^^^^
+        messages=messages,
+        ^^^^^^^^^^^^^^^^^^
+        context=context,
+        ^^^^^^^^^^^^^^^^
+    ),
+    ^
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\unittest\mock.py", line 1169, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\unittest\mock.py", line 1173, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\unittest\mock.py", line 1228, in _execute_mock_call
+    raise effect
+RuntimeError: boom
+2026-04-30 02:05:54,424 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:05:54,425 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='generate report', context={'report': True, 'user_id': '1001', 'month': '2025-06'}
+2026-04-30 02:05:54,426 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:54,427 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True, 'user_id': '1001', 'month': '2025-06', 'device_id': 'dev1'}
+2026-04-30 02:05:54,427 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:54,429 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True}
+2026-04-30 02:05:54,429 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:05:54,438 - rag-agent.vector_api - ERROR - vector.py:32 - [vector/health] Health check error: Connection refused
+2026-04-30 02:06:37,932 - rag-agent - INFO - logging.py:47 - [logging] Logger initialized: level=INFO
+2026-04-30 02:06:37,934 - rag-agent.llm_client - INFO - llm_client.py:77 - [llm_client] Initializing embedding model: text-embedding-v4
+2026-04-30 02:06:38,065 - rag-agent.qdrant_client - INFO - qdrant_client.py:49 - [qdrant_client] Connecting to Qdrant at http://192.168.31.104:6333 (timeout=10s)
+2026-04-30 02:06:38,128 - rag-agent.qdrant_client - INFO - qdrant_client.py:93 - [qdrant_client] Collection 'rag_agent_knowledge' already exists, skipping creation
+2026-04-30 02:06:38,129 - rag-agent.main - INFO - main.py:33 - [main] Qdrant collection 'rag_agent_knowledge' ready
+2026-04-30 02:06:38,189 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-2/2 ingested
+2026-04-30 02:06:38,190 - rag-agent.knowledge_api - INFO - knowledge.py:140 - [knowledge_api] Ingested document 'doc_api_test': 2 chunks
+2026-04-30 02:06:38,193 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Invalid or missing X-Internal-Token
+2026-04-30 02:06:38,197 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Invalid or missing X-Internal-Token
+2026-04-30 02:06:38,200 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=DOCUMENT_NOT_FOUND, status=404, msg=File not found: data/nonexistent_file.txt
+2026-04-30 02:06:38,203 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=VECTOR_STORE_UNAVAILABLE, status=503, msg=Vector store unavailable
+2026-04-30 02:06:38,206 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Path traversal is not allowed
+2026-04-30 02:06:38,209 - rag-agent.knowledge_api - INFO - knowledge.py:184 - [knowledge_api] Deleted/disabled document 'doc_delete': disabled
+2026-04-30 02:06:38,212 - rag-agent.knowledge_api - INFO - knowledge.py:184 - [knowledge_api] Deleted/disabled document 'doc_purge': deleted
+2026-04-30 02:06:38,215 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Invalid or missing X-Internal-Token
+2026-04-30 02:06:38,227 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,230 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3-plus, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,230 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,233 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:9999
+2026-04-30 02:06:38,233 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,236 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,237 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,239 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,240 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,242 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,243 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,245 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,246 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,248 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,249 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,251 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,252 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,254 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,255 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,257 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,258 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,261 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,261 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,264 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,264 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,267 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,267 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,270 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,270 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,273 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,273 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,276 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,276 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,279 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,279 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,282 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,282 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,285 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:06:38,285 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:06:38,288 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,180 - rag-agent - INFO - logging.py:47 - [logging] Logger initialized: level=INFO
+2026-04-30 02:07:21,182 - rag-agent.llm_client - INFO - llm_client.py:77 - [llm_client] Initializing embedding model: text-embedding-v4
+2026-04-30 02:07:21,318 - rag-agent.qdrant_client - INFO - qdrant_client.py:49 - [qdrant_client] Connecting to Qdrant at http://192.168.31.104:6333 (timeout=10s)
+2026-04-30 02:07:21,380 - rag-agent.qdrant_client - INFO - qdrant_client.py:93 - [qdrant_client] Collection 'rag_agent_knowledge' already exists, skipping creation
+2026-04-30 02:07:21,381 - rag-agent.main - INFO - main.py:33 - [main] Qdrant collection 'rag_agent_knowledge' ready
+2026-04-30 02:07:21,454 - rag-agent.agent_tools - INFO - agent_tools.py:99 - [tool] Loading external data from: D:\pythonProject\Rag-Agent\data\external\records.csv
+2026-04-30 02:07:21,455 - rag-agent.agent_tools - INFO - agent_tools.py:113 - [tool] External data loaded: 10 users
+2026-04-30 02:07:21,456 - rag-agent.agent_tools - INFO - agent_tools.py:127 - [tool] fetch_external_data: user=1001, month=2025-01, found
+2026-04-30 02:07:21,457 - rag-agent.agent_tools - WARNING - agent_tools.py:134 - [tool] fetch_external_data: user=9999, month=2099-01, not found
+2026-04-30 02:07:21,458 - rag-agent.agent_tools - INFO - agent_tools.py:85 - [tool] get_current_month: 2026-04 (system)
+2026-04-30 02:07:21,459 - rag-agent.agent_tools - INFO - agent_tools.py:85 - [tool] get_current_month: 2026-04 (system)
+2026-04-30 02:07:21,463 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 10c670c2-e435-4a55-a43b-219e0bf636d8
+2026-04-30 02:07:21,463 - rag-agent.chat_api - INFO - chat.py:97 - [chat/stream] SSE request: session=10c670c2-e435-4a55-a43b-219e0bf636d8, message='你好'
+2026-04-30 02:07:21,464 - rag-agent.chat_api - INFO - chat.py:124 - [chat/stream] SSE done: session=10c670c2-e435-4a55-a43b-219e0bf636d8, reply_len=11
+2026-04-30 02:07:21,466 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: d936a0ef-33d6-4cf6-b215-26b7fdf3df34
+2026-04-30 02:07:21,466 - rag-agent.chat_api - INFO - chat.py:97 - [chat/stream] SSE request: session=d936a0ef-33d6-4cf6-b215-26b7fdf3df34, message='你好'
+2026-04-30 02:07:21,467 - rag-agent.chat_api - INFO - chat.py:124 - [chat/stream] SSE done: session=d936a0ef-33d6-4cf6-b215-26b7fdf3df34, reply_len=6
+2026-04-30 02:07:21,469 - rag-agent.errors - WARNING - exceptions.py:179 - [errors] Validation error: POST /api/v1/chat/stream — [{'type': 'string_too_short', 'loc': ('body', 'message'), 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}]
+2026-04-30 02:07:21,471 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 96834031-c883-4e3b-b10c-5d6acc85e32b
+2026-04-30 02:07:21,471 - rag-agent.chat_api - INFO - chat.py:37 - [chat] Sync request: session=96834031-c883-4e3b-b10c-5d6acc85e32b, message='你好'
+2026-04-30 02:07:21,471 - rag-agent.chat_api - INFO - chat.py:58 - [chat] Sync response: session=96834031-c883-4e3b-b10c-5d6acc85e32b, reply_len=6
+2026-04-30 02:07:21,473 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 289dd616-ec34-424c-aeaf-fc6e4b725101
+2026-04-30 02:07:21,473 - rag-agent.chat_api - INFO - chat.py:97 - [chat/stream] SSE request: session=289dd616-ec34-424c-aeaf-fc6e4b725101, message='你好'
+2026-04-30 02:07:21,474 - rag-agent.chat_api - ERROR - chat.py:149 - [chat/stream] Unexpected error: session=289dd616-ec34-424c-aeaf-fc6e4b725101, model failed
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 106, in event_generator
+    async for event in chat_service.stream_chat(
+    ...<10 lines>...
+        }
+  File "D:\pythonProject\Rag-Agent\tests\test_chat.py", line 87, in error_gen
+    raise RuntimeError("model failed")
+RuntimeError: model failed
+2026-04-30 02:07:21,483 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,485 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3-plus, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,486 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,489 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:9999
+2026-04-30 02:07:21,489 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,492 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,493 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,495 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,496 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,499 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,499 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,502 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,502 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,505 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,505 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,508 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,508 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,511 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,511 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,514 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,514 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,517 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,517 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,520 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,520 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,523 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,523 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,526 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,526 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,529 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,529 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,532 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,533 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,535 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,535 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,538 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,539 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,541 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,542 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,544 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,546 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,549 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,549 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,552 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,552 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,555 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,555 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,558 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,561 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:07:21,563 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:07:21,564 - rag-agent.llm_client - INFO - llm_client.py:58 - [llm_client] Initializing streaming model: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, streaming=True
+2026-04-30 02:07:21,746 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:07:21,746 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:07:21,747 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=3, draft_len=5
+2026-04-30 02:07:21,747 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:07:21,748 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:07:21,748 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:07:21,749 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=True, context_len=0, draft_len=0
+2026-04-30 02:07:21,749 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:07:21,749 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:07:21,749 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:07:21,750 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:07:21,750 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:07:21,751 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:07:21,751 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:07:21,758 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:07:21,760 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:07:21,761 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:07:21,762 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:07:21,763 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:07:21,763 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:07:21,767 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:07:21,772 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-2/2 ingested
+2026-04-30 02:07:21,772 - rag-agent.knowledge_api - INFO - knowledge.py:140 - [knowledge_api] Ingested document 'doc_api_test': 2 chunks
+2026-04-30 02:07:21,775 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Invalid or missing X-Internal-Token
+2026-04-30 02:07:21,778 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Invalid or missing X-Internal-Token
+2026-04-30 02:07:21,781 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=DOCUMENT_NOT_FOUND, status=404, msg=File not found: data/nonexistent_file.txt
+2026-04-30 02:07:21,784 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=VECTOR_STORE_UNAVAILABLE, status=503, msg=Vector store unavailable
+2026-04-30 02:07:21,787 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Path traversal is not allowed
+2026-04-30 02:07:21,790 - rag-agent.knowledge_api - INFO - knowledge.py:184 - [knowledge_api] Deleted/disabled document 'doc_delete': disabled
+2026-04-30 02:07:21,793 - rag-agent.knowledge_api - INFO - knowledge.py:184 - [knowledge_api] Deleted/disabled document 'doc_purge': deleted
+2026-04-30 02:07:21,795 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Invalid or missing X-Internal-Token
+2026-04-30 02:07:21,797 - rag-agent.llm_client - INFO - llm_client.py:35 - [llm_client] Initializing agent model: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, streaming=False
+2026-04-30 02:07:21,802 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:07:21,805 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:07:21,806 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:07:21,808 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:07:21,814 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:07:21,823 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:07:21,823 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:179 - [qdrant_vector_store] Disabled document_id='doc_002'
+2026-04-30 02:07:21,828 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:07:21,828 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:159 - [qdrant_vector_store] Deleted all points for document_id='doc_003'
+2026-04-30 02:07:21,832 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:07:21,833 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:07:21,839 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection'
+2026-04-30 02:07:21,895 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test'
+2026-04-30 02:07:21,899 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:159 - [qdrant_vector_store] Deleted all points for document_id='doc_001'
+2026-04-30 02:07:21,900 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:179 - [qdrant_vector_store] Disabled document_id='doc_001'
+2026-04-30 02:07:21,902 - rag-agent.qdrant_vector_store - ERROR - qdrant_vector_store.py:188 - [qdrant_vector_store] Health check failed: Connection refused
+2026-04-30 02:07:21,903 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='make report', context={'report': True}, history_len=0
+2026-04-30 02:07:21,903 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['fetch_external_data'], draft_len=28, tool_context_len=17
+2026-04-30 02:07:21,904 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='hello', context={'report': False}, history_len=0
+2026-04-30 02:07:21,904 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=[], draft_len=9, tool_context_len=0
+2026-04-30 02:07:21,904 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='check data', context={'report': False}, history_len=0
+2026-04-30 02:07:21,904 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['get_weather'], draft_len=0, tool_context_len=6
+2026-04-30 02:07:21,905 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='hello', context={'report': False}, history_len=0
+2026-04-30 02:07:21,905 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=[], draft_len=9, tool_context_len=0
+2026-04-30 02:07:21,905 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='hello', context={'report': False}, history_len=10
+2026-04-30 02:07:21,906 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=[], draft_len=9, tool_context_len=0
+2026-04-30 02:07:21,906 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='test', context={'report': False}, history_len=0
+2026-04-30 02:07:21,906 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['t1', 't2'], draft_len=4, tool_context_len=15
+2026-04-30 02:07:21,907 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='test', context={'report': False}, history_len=0
+2026-04-30 02:07:21,907 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['get_weather'], draft_len=20, tool_context_len=11
+2026-04-30 02:07:21,912 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 5bf9ab73-1158-4917-af55-f49141e4d6e7
+2026-04-30 02:07:21,912 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=5bf9ab73-1158-4917-af55-f49141e4d6e7, user_id=1001, month=2025-06
+2026-04-30 02:07:21,913 - rag-agent.report_api - INFO - report.py:76 - [report/stream] SSE done: session=5bf9ab73-1158-4917-af55-f49141e4d6e7
+2026-04-30 02:07:21,915 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 615eecdc-a4d1-4817-82e9-856ebb1c0770
+2026-04-30 02:07:21,915 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=615eecdc-a4d1-4817-82e9-856ebb1c0770, user_id=1001, month=2025-06
+2026-04-30 02:07:21,916 - rag-agent.report_api - INFO - report.py:76 - [report/stream] SSE done: session=615eecdc-a4d1-4817-82e9-856ebb1c0770
+2026-04-30 02:07:21,918 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: df534281-5721-43d7-985e-988a52f8fafe
+2026-04-30 02:07:21,918 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=df534281-5721-43d7-985e-988a52f8fafe, user_id=None, month=None
+2026-04-30 02:07:21,918 - rag-agent.report_api - INFO - report.py:76 - [report/stream] SSE done: session=df534281-5721-43d7-985e-988a52f8fafe
+2026-04-30 02:07:21,920 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 930196d4-f5f1-4ba0-a55e-db6969726420
+2026-04-30 02:07:21,920 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=930196d4-f5f1-4ba0-a55e-db6969726420, user_id=1001, month=2025-06
+2026-04-30 02:07:21,921 - rag-agent.report_api - ERROR - report.py:98 - [report/stream] Unexpected error: session=930196d4-f5f1-4ba0-a55e-db6969726420, model failed
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\report.py", line 64, in event_generator
+    async for event in report_service.stream_report(
+    ...<9 lines>...
+        }
+  File "D:\pythonProject\Rag-Agent\tests\test_report.py", line 81, in error_gen
+    raise RuntimeError("model failed")
+RuntimeError: model failed
+2026-04-30 02:07:21,924 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:07:22,425 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:22,428 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='generate report', context={'report': True}
+2026-04-30 02:07:22,928 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:22,931 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello1'
+2026-04-30 02:07:22,931 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello2'
+2026-04-30 02:07:23,439 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:23,439 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:23,455 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:07:23,456 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True}
+2026-04-30 02:07:23,960 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:23,961 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:23,963 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:07:23,964 - rag-agent.chat_service - ERROR - chat_service.py:100 - [ChatService] Agent stream error: threaded agent error
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 71, in stream_chat
+    agent_result = agent_future.result()
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 56, in <lambda>
+    lambda: self._agent.execute(
+            ~~~~~~~~~~~~~~~~~~~^
+        query=query,
+        ^^^^^^^^^^^^
+        messages=messages,
+        ^^^^^^^^^^^^^^^^^^
+        context=context,
+        ^^^^^^^^^^^^^^^^
+    ),
+    ^
+  File "D:\pythonProject\Rag-Agent\tests\test_service_concurrency.py", line 182, in execute
+    raise RuntimeError("threaded agent error")
+RuntimeError: threaded agent error
+2026-04-30 02:07:23,966 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True}
+2026-04-30 02:07:23,966 - rag-agent.report_service - ERROR - report_service.py:121 - [ReportService] Report stream error: threaded agent error
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\services\report_service.py", line 91, in stream_report
+    agent_result = agent_future.result()
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\pythonProject\Rag-Agent\app\services\report_service.py", line 78, in <lambda>
+    lambda: self._agent.execute(query=query, context=context),
+            ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\pythonProject\Rag-Agent\tests\test_service_concurrency.py", line 182, in execute
+    raise RuntimeError("threaded agent error")
+RuntimeError: threaded agent error
+2026-04-30 02:07:23,968 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:07:23,969 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:23,971 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:07:23,971 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:23,992 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:07:23,992 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:23,994 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:07:23,995 - rag-agent.chat_service - ERROR - chat_service.py:100 - [ChatService] Agent stream error: boom
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 71, in stream_chat
+    agent_result = agent_future.result()
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 56, in <lambda>
+    lambda: self._agent.execute(
+            ~~~~~~~~~~~~~~~~~~~^
+        query=query,
+        ^^^^^^^^^^^^
+        messages=messages,
+        ^^^^^^^^^^^^^^^^^^
+        context=context,
+        ^^^^^^^^^^^^^^^^
+    ),
+    ^
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\unittest\mock.py", line 1169, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\unittest\mock.py", line 1173, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\unittest\mock.py", line 1228, in _execute_mock_call
+    raise effect
+RuntimeError: boom
+2026-04-30 02:07:23,997 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:07:23,999 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='generate report', context={'report': True, 'user_id': '1001', 'month': '2025-06'}
+2026-04-30 02:07:23,999 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:24,001 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True, 'user_id': '1001', 'month': '2025-06', 'device_id': 'dev1'}
+2026-04-30 02:07:24,001 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:24,003 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True}
+2026-04-30 02:07:24,003 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:07:24,012 - rag-agent.vector_api - ERROR - vector.py:32 - [vector/health] Health check error: Connection refused
+2026-04-30 02:08:46,737 - rag-agent - INFO - logging.py:47 - [logging] Logger initialized: level=INFO
+2026-04-30 02:08:46,739 - rag-agent.llm_client - INFO - llm_client.py:77 - [llm_client] Initializing embedding model: text-embedding-v4
+2026-04-30 02:08:46,875 - rag-agent.qdrant_client - INFO - qdrant_client.py:49 - [qdrant_client] Connecting to Qdrant at http://192.168.31.104:6333 (timeout=10s)
+2026-04-30 02:08:46,888 - rag-agent - INFO - logging.py:47 - [logging] Logger initialized: level=INFO
+2026-04-30 02:08:46,891 - rag-agent.llm_client - INFO - llm_client.py:77 - [llm_client] Initializing embedding model: text-embedding-v4
+2026-04-30 02:08:46,939 - rag-agent.qdrant_client - INFO - qdrant_client.py:93 - [qdrant_client] Collection 'rag_agent_knowledge' already exists, skipping creation
+2026-04-30 02:08:46,939 - rag-agent.main - INFO - main.py:33 - [main] Qdrant collection 'rag_agent_knowledge' ready
+2026-04-30 02:08:47,027 - rag-agent.qdrant_client - INFO - qdrant_client.py:49 - [qdrant_client] Connecting to Qdrant at http://192.168.31.104:6333 (timeout=10s)
+2026-04-30 02:08:47,095 - rag-agent.qdrant_client - INFO - qdrant_client.py:93 - [qdrant_client] Collection 'rag_agent_knowledge' already exists, skipping creation
+2026-04-30 02:08:47,095 - rag-agent.main - INFO - main.py:33 - [main] Qdrant collection 'rag_agent_knowledge' ready
+2026-04-30 02:08:47,168 - rag-agent.agent_tools - INFO - agent_tools.py:99 - [tool] Loading external data from: D:\pythonProject\Rag-Agent\data\external\records.csv
+2026-04-30 02:08:47,169 - rag-agent.agent_tools - INFO - agent_tools.py:113 - [tool] External data loaded: 10 users
+2026-04-30 02:08:47,171 - rag-agent.agent_tools - INFO - agent_tools.py:127 - [tool] fetch_external_data: user=1001, month=2025-01, found
+2026-04-30 02:08:47,172 - rag-agent.agent_tools - WARNING - agent_tools.py:134 - [tool] fetch_external_data: user=9999, month=2099-01, not found
+2026-04-30 02:08:47,172 - rag-agent.agent_tools - INFO - agent_tools.py:85 - [tool] get_current_month: 2026-04 (system)
+2026-04-30 02:08:47,173 - rag-agent.agent_tools - INFO - agent_tools.py:85 - [tool] get_current_month: 2026-04 (system)
+2026-04-30 02:08:47,178 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 3641d8b2-6a72-400a-9cd9-2cee97fdbf2b
+2026-04-30 02:08:47,178 - rag-agent.chat_api - INFO - chat.py:97 - [chat/stream] SSE request: session=3641d8b2-6a72-400a-9cd9-2cee97fdbf2b, message='你好'
+2026-04-30 02:08:47,179 - rag-agent.chat_api - INFO - chat.py:124 - [chat/stream] SSE done: session=3641d8b2-6a72-400a-9cd9-2cee97fdbf2b, reply_len=11
+2026-04-30 02:08:47,181 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 394756e2-22ab-4ecc-9626-7535286512bf
+2026-04-30 02:08:47,182 - rag-agent.chat_api - INFO - chat.py:97 - [chat/stream] SSE request: session=394756e2-22ab-4ecc-9626-7535286512bf, message='你好'
+2026-04-30 02:08:47,182 - rag-agent.chat_api - INFO - chat.py:124 - [chat/stream] SSE done: session=394756e2-22ab-4ecc-9626-7535286512bf, reply_len=6
+2026-04-30 02:08:47,184 - rag-agent.errors - WARNING - exceptions.py:179 - [errors] Validation error: POST /api/v1/chat/stream — [{'type': 'string_too_short', 'loc': ('body', 'message'), 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}]
+2026-04-30 02:08:47,187 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 43b35426-02c2-4909-96c9-dcf2f92c12d8
+2026-04-30 02:08:47,187 - rag-agent.chat_api - INFO - chat.py:37 - [chat] Sync request: session=43b35426-02c2-4909-96c9-dcf2f92c12d8, message='你好'
+2026-04-30 02:08:47,187 - rag-agent.chat_api - INFO - chat.py:58 - [chat] Sync response: session=43b35426-02c2-4909-96c9-dcf2f92c12d8, reply_len=6
+2026-04-30 02:08:47,190 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 962334b1-e884-4444-b8fe-11ecb93a07e0
+2026-04-30 02:08:47,190 - rag-agent.chat_api - INFO - chat.py:97 - [chat/stream] SSE request: session=962334b1-e884-4444-b8fe-11ecb93a07e0, message='你好'
+2026-04-30 02:08:47,191 - rag-agent.chat_api - ERROR - chat.py:149 - [chat/stream] Unexpected error: session=962334b1-e884-4444-b8fe-11ecb93a07e0, model failed
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\chat.py", line 106, in event_generator
+    async for event in chat_service.stream_chat(
+    ...<10 lines>...
+        }
+  File "D:\pythonProject\Rag-Agent\tests\test_chat.py", line 87, in error_gen
+    raise RuntimeError("model failed")
+RuntimeError: model failed
+2026-04-30 02:08:47,201 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,203 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3-plus, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,204 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,206 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:9999
+2026-04-30 02:08:47,207 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,210 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,211 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,213 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,214 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,217 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,217 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,220 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,220 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,223 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,224 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,226 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,227 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,229 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,230 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,233 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,233 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,236 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,236 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,239 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,240 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,242 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,243 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,245 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,246 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,249 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,249 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,252 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,252 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,255 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,256 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,258 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,259 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,261 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,262 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,264 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,267 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,269 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,270 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,272 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,273 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,276 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,276 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,279 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,282 - rag-agent.config_loader - INFO - loader.py:122 - [config_loader] Loading configuration from D:\pythonProject\Rag-Agent\config
+2026-04-30 02:08:47,284 - rag-agent.config_loader - INFO - loader.py:260 - [config_loader] Settings loaded: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, host=0.0.0.0:8000
+2026-04-30 02:08:47,285 - rag-agent.llm_client - INFO - llm_client.py:58 - [llm_client] Initializing streaming model: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, streaming=True
+2026-04-30 02:08:47,474 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:08:47,474 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:08:47,474 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=3, draft_len=5
+2026-04-30 02:08:47,475 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:08:47,475 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:08:47,475 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:08:47,476 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=True, context_len=0, draft_len=0
+2026-04-30 02:08:47,476 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:08:47,477 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:08:47,477 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:08:47,477 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:08:47,478 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:08:47,478 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:72 - [FinalAnswerStreamer] Starting stream: report=False, context_len=0, draft_len=0
+2026-04-30 02:08:47,478 - rag-agent.final_answer_streamer - INFO - final_answer_streamer.py:90 - [FinalAnswerStreamer] Stream finished
+2026-04-30 02:08:47,486 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:08:47,487 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:08:47,488 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:08:47,489 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:08:47,491 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:08:47,491 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:08:47,494 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-1/1 ingested
+2026-04-30 02:08:47,500 - rag-agent.ingest_service - INFO - ingest_service.py:116 - [ingest_service] Batch 0-2/2 ingested
+2026-04-30 02:08:47,500 - rag-agent.knowledge_api - INFO - knowledge.py:140 - [knowledge_api] Ingested document 'doc_api_test': 2 chunks
+2026-04-30 02:08:47,503 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Invalid or missing X-Internal-Token
+2026-04-30 02:08:47,508 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Invalid or missing X-Internal-Token
+2026-04-30 02:08:47,511 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=DOCUMENT_NOT_FOUND, status=404, msg=File not found: data/nonexistent_file.txt
+2026-04-30 02:08:47,514 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=VECTOR_STORE_UNAVAILABLE, status=503, msg=Vector store unavailable
+2026-04-30 02:08:47,517 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Path traversal is not allowed
+2026-04-30 02:08:47,520 - rag-agent.knowledge_api - INFO - knowledge.py:184 - [knowledge_api] Deleted/disabled document 'doc_delete': disabled
+2026-04-30 02:08:47,523 - rag-agent.knowledge_api - INFO - knowledge.py:184 - [knowledge_api] Deleted/disabled document 'doc_purge': deleted
+2026-04-30 02:08:47,526 - rag-agent.errors - ERROR - exceptions.py:158 - [errors] AppException: code=UNAUTHORIZED, status=401, msg=Invalid or missing X-Internal-Token
+2026-04-30 02:08:47,527 - rag-agent.llm_client - INFO - llm_client.py:35 - [llm_client] Initializing agent model: model=qwen3.6-flash, base_url=https://dashscope.aliyuncs.com/compatible-mode/v1, streaming=False
+2026-04-30 02:08:47,533 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:08:47,534 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:08:47,536 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:08:47,538 - rag-agent.errors - WARNING - exceptions.py:140 - [errors] HTTP 404: GET /nonexistent
+2026-04-30 02:08:47,544 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:08:47,553 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:08:47,554 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:179 - [qdrant_vector_store] Disabled document_id='doc_002'
+2026-04-30 02:08:47,558 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:08:47,559 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:159 - [qdrant_vector_store] Deleted all points for document_id='doc_003'
+2026-04-30 02:08:47,564 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:08:47,564 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection_mem'
+2026-04-30 02:08:47,569 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test_collection'
+2026-04-30 02:08:47,571 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:76 - [qdrant_vector_store] Upserted 1 chunks into 'test'
+2026-04-30 02:08:47,575 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:159 - [qdrant_vector_store] Deleted all points for document_id='doc_001'
+2026-04-30 02:08:47,576 - rag-agent.qdrant_vector_store - INFO - qdrant_vector_store.py:179 - [qdrant_vector_store] Disabled document_id='doc_001'
+2026-04-30 02:08:47,577 - rag-agent.qdrant_vector_store - ERROR - qdrant_vector_store.py:188 - [qdrant_vector_store] Health check failed: Connection refused
+2026-04-30 02:08:47,579 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='make report', context={'report': True}, history_len=0
+2026-04-30 02:08:47,579 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['fetch_external_data'], draft_len=28, tool_context_len=17
+2026-04-30 02:08:47,580 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='hello', context={'report': False}, history_len=0
+2026-04-30 02:08:47,580 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=[], draft_len=9, tool_context_len=0
+2026-04-30 02:08:47,580 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='check data', context={'report': False}, history_len=0
+2026-04-30 02:08:47,580 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['get_weather'], draft_len=0, tool_context_len=6
+2026-04-30 02:08:47,581 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='hello', context={'report': False}, history_len=0
+2026-04-30 02:08:47,581 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=[], draft_len=9, tool_context_len=0
+2026-04-30 02:08:47,581 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='hello', context={'report': False}, history_len=10
+2026-04-30 02:08:47,581 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=[], draft_len=9, tool_context_len=0
+2026-04-30 02:08:47,582 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='test', context={'report': False}, history_len=0
+2026-04-30 02:08:47,582 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['t1', 't2'], draft_len=4, tool_context_len=15
+2026-04-30 02:08:47,583 - rag-agent.react_agent - INFO - react_agent.py:96 - [ReactAgent] Starting execution: query='test', context={'report': False}, history_len=0
+2026-04-30 02:08:47,583 - rag-agent.react_agent - INFO - react_agent.py:132 - [ReactAgent] Execution complete: used_tools=['get_weather'], draft_len=20, tool_context_len=11
+2026-04-30 02:08:47,588 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: 22e89398-ed48-474b-bb7d-0c6fe90ba804
+2026-04-30 02:08:47,588 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=22e89398-ed48-474b-bb7d-0c6fe90ba804, user_id=1001, month=2025-06
+2026-04-30 02:08:47,588 - rag-agent.report_api - INFO - report.py:76 - [report/stream] SSE done: session=22e89398-ed48-474b-bb7d-0c6fe90ba804
+2026-04-30 02:08:47,591 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: a6744117-7b68-4cd4-ba99-3989febef8d5
+2026-04-30 02:08:47,591 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=a6744117-7b68-4cd4-ba99-3989febef8d5, user_id=1001, month=2025-06
+2026-04-30 02:08:47,591 - rag-agent.report_api - INFO - report.py:76 - [report/stream] SSE done: session=a6744117-7b68-4cd4-ba99-3989febef8d5
+2026-04-30 02:08:47,593 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: a3cd741e-da7d-4cd6-8757-6461eeb18ce6
+2026-04-30 02:08:47,594 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=a3cd741e-da7d-4cd6-8757-6461eeb18ce6, user_id=None, month=None
+2026-04-30 02:08:47,594 - rag-agent.report_api - INFO - report.py:76 - [report/stream] SSE done: session=a3cd741e-da7d-4cd6-8757-6461eeb18ce6
+2026-04-30 02:08:47,596 - rag-agent.session_service - INFO - session_service.py:25 - [session] Created: a2ef22e5-a330-40d7-a83d-f99167d98b7c
+2026-04-30 02:08:47,596 - rag-agent.report_api - INFO - report.py:55 - [report/stream] SSE request: session=a2ef22e5-a330-40d7-a83d-f99167d98b7c, user_id=1001, month=2025-06
+2026-04-30 02:08:47,596 - rag-agent.report_api - ERROR - report.py:98 - [report/stream] Unexpected error: session=a2ef22e5-a330-40d7-a83d-f99167d98b7c, model failed
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\api\v1\report.py", line 64, in event_generator
+    async for event in report_service.stream_report(
+    ...<9 lines>...
+        }
+  File "D:\pythonProject\Rag-Agent\tests\test_report.py", line 81, in error_gen
+    raise RuntimeError("model failed")
+RuntimeError: model failed
+2026-04-30 02:08:47,600 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:08:48,101 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:48,103 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='generate report', context={'report': True}
+2026-04-30 02:08:48,604 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:48,606 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello1'
+2026-04-30 02:08:48,606 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello2'
+2026-04-30 02:08:49,120 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:49,120 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:49,123 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:08:49,123 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True}
+2026-04-30 02:08:49,638 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:49,638 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:49,640 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:08:49,641 - rag-agent.chat_service - ERROR - chat_service.py:100 - [ChatService] Agent stream error: threaded agent error
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 71, in stream_chat
+    agent_result = agent_future.result()
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 56, in <lambda>
+    lambda: self._agent.execute(
+            ~~~~~~~~~~~~~~~~~~~^
+        query=query,
+        ^^^^^^^^^^^^
+        messages=messages,
+        ^^^^^^^^^^^^^^^^^^
+        context=context,
+        ^^^^^^^^^^^^^^^^
+    ),
+    ^
+  File "D:\pythonProject\Rag-Agent\tests\test_service_concurrency.py", line 182, in execute
+    raise RuntimeError("threaded agent error")
+RuntimeError: threaded agent error
+2026-04-30 02:08:49,643 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True}
+2026-04-30 02:08:49,644 - rag-agent.report_service - ERROR - report_service.py:121 - [ReportService] Report stream error: threaded agent error
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\services\report_service.py", line 91, in stream_report
+    agent_result = agent_future.result()
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\pythonProject\Rag-Agent\app\services\report_service.py", line 78, in <lambda>
+    lambda: self._agent.execute(query=query, context=context),
+            ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\pythonProject\Rag-Agent\tests\test_service_concurrency.py", line 182, in execute
+    raise RuntimeError("threaded agent error")
+RuntimeError: threaded agent error
+2026-04-30 02:08:49,646 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:08:49,646 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:49,648 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:08:49,649 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:49,650 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:08:49,651 - rag-agent.chat_service - INFO - chat_service.py:79 - [ChatService] Phase 2 — Final answer streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:49,652 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:08:49,653 - rag-agent.chat_service - ERROR - chat_service.py:100 - [ChatService] Agent stream error: boom
+Traceback (most recent call last):
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 71, in stream_chat
+    agent_result = agent_future.result()
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "D:\pythonProject\Rag-Agent\app\services\chat_service.py", line 56, in <lambda>
+    lambda: self._agent.execute(
+            ~~~~~~~~~~~~~~~~~~~^
+        query=query,
+        ^^^^^^^^^^^^
+        messages=messages,
+        ^^^^^^^^^^^^^^^^^^
+        context=context,
+        ^^^^^^^^^^^^^^^^
+    ),
+    ^
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\unittest\mock.py", line 1169, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\unittest\mock.py", line 1173, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\chengsikai\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\unittest\mock.py", line 1228, in _execute_mock_call
+    raise effect
+RuntimeError: boom
+2026-04-30 02:08:49,655 - rag-agent.chat_service - INFO - chat_service.py:44 - [ChatService] Phase 1 — Agent execution: query='hello'
+2026-04-30 02:08:49,657 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='generate report', context={'report': True, 'user_id': '1001', 'month': '2025-06'}
+2026-04-30 02:08:49,657 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:49,670 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True, 'user_id': '1001', 'month': '2025-06', 'device_id': 'dev1'}
+2026-04-30 02:08:49,671 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:49,673 - rag-agent.report_service - INFO - report_service.py:65 - [ReportService] Phase 1 — Agent execution: query='report', context={'report': True}
+2026-04-30 02:08:49,673 - rag-agent.report_service - INFO - report_service.py:100 - [ReportService] Phase 2 — Report streaming: used_tools=['rag_summarize']
+2026-04-30 02:08:49,682 - rag-agent.vector_api - ERROR - vector.py:32 - [vector/health] Health check error: Connection refused

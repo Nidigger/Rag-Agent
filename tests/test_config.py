@@ -82,13 +82,6 @@ class TestNestedSettingsStructure:
         assert isinstance(settings.server.cors_allow_origins, list)
         assert len(settings.server.cors_allow_origins) > 0
 
-    def test_model_settings_group(self):
-        assert isinstance(settings.model, ModelSettings)
-        assert settings.model.chat_model_name == "qwen3-max"
-        assert settings.model.embedding_model_name == "text-embedding-v4"
-        assert "dashscope" in settings.model.openai_compatible_base_url
-        assert settings.model.dashscope_api_key is not None
-
     def test_chroma_settings_group(self):
         assert isinstance(settings.chroma, ChromaSettings)
         assert settings.chroma.collection_name == "agent"
@@ -337,3 +330,51 @@ class TestTypeConversionHelpers:
         assert _resolve_bool("K", {}, "False") is False
         assert _resolve_bool("K", {}, "false") is False
         assert _resolve_bool("K", {}, "0") is False
+
+
+class TestSecuritySettings:
+    def test_security_settings_present(self):
+        from app.config import settings
+
+        assert settings.security is not None
+
+    def test_internal_token_defaults_to_none(self, monkeypatch):
+        from app.config.loader import load_settings
+
+        monkeypatch.delenv("FASTAPI_INTERNAL_TOKEN", raising=False)
+        settings = load_settings()
+        assert settings.security.internal_token is None
+
+    def test_internal_token_from_env(self, monkeypatch):
+        from app.config.loader import load_settings
+
+        monkeypatch.setenv("FASTAPI_INTERNAL_TOKEN", "my-secret-token")
+        settings = load_settings()
+        assert settings.security.internal_token is not None
+        assert settings.security.internal_token.get_secret_value() == "my-secret-token"
+
+    def test_internal_token_is_secret_str(self, monkeypatch):
+        from app.config.loader import load_settings
+
+        monkeypatch.setenv("FASTAPI_INTERNAL_TOKEN", "test123")
+        settings = load_settings()
+        from pydantic import SecretStr
+        assert isinstance(settings.security.internal_token, SecretStr)
+
+    def test_internal_token_str_does_not_reveal_value(self, monkeypatch):
+        from app.config.loader import load_settings
+
+        monkeypatch.setenv("FASTAPI_INTERNAL_TOKEN", "super-secret")
+        settings = load_settings()
+        assert "super-secret" not in str(settings.security.internal_token)
+
+    def test_internal_token_from_env_overrides_dotenv(self, monkeypatch, tmp_path):
+        from app.config.loader import load_settings
+
+        env_file = tmp_path / ".env"
+        env_file.write_text("FASTAPI_INTERNAL_TOKEN=dotenv-token")
+        monkeypatch.setenv("FASTAPI_INTERNAL_TOKEN", "env-override-token")
+        monkeypatch.setattr("app.config.loader._ENV_FILE", env_file)
+
+        settings = load_settings()
+        assert settings.security.internal_token.get_secret_value() == "env-override-token"

@@ -1,5 +1,5 @@
 # Agent / Model configuration
-chat_model_name: qwen3-max
+chat_model_name: qwen3.6-flash
 embedding_model_name: text-embedding-v4
 
 # OpenAI-compatible endpoint — swap to change provider

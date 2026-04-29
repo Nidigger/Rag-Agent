@@ -1,4 +1,4 @@
-# ChromaDB vector store configuration
+# ChromaDB vector store configuration (legacy / fallback)
 collection_name: agent
 persist_directory: chroma_db
 k: 3

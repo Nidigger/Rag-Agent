@@ -17,10 +17,14 @@ from dotenv import dotenv_values
 from app.config.schema import (
     AppSettings,
     ChromaSettings,
+    IngestSettings,
     ModelSettings,
     PromptSettings,
+    QdrantSettings,
     RagSettings,
+    SecuritySettings,
     ServerSettings,
+    VectorSettings,
 )
 
 logger = logging.getLogger("rag-agent.config_loader")
@@ -190,6 +194,44 @@ def load_settings() -> AppSettings:
         ),
     )
 
+    # Assemble VectorSettings — config/vector.yml with env override
+    vector_yml = _load_yaml("vector.yml")
+    provider = _resolve_str("VECTOR_PROVIDER", dotenv, vector_yml.get("provider", "qdrant"))
+
+    qdrant_yml = vector_yml.get("qdrant", {})
+    qdrant = QdrantSettings(
+        url=_resolve_str("QDRANT_URL", dotenv, qdrant_yml.get("url")),
+        collection_name=_resolve_str(
+            "QDRANT_COLLECTION_NAME", dotenv, qdrant_yml.get("collection_name")
+        ),
+        distance=_resolve_str("QDRANT_DISTANCE", dotenv, qdrant_yml.get("distance", "Cosine")),
+        vector_size=_resolve_int(
+            "QDRANT_VECTOR_SIZE", dotenv, qdrant_yml.get("vector_size", 1536)
+        ),
+        timeout_seconds=_resolve_int(
+            "QDRANT_TIMEOUT", dotenv, qdrant_yml.get("timeout_seconds", 10)
+        ),
+    )
+
+    ingest_yml = vector_yml.get("ingest", {})
+    ingest = IngestSettings(
+        chunk_size=_resolve_int(
+            "VECTOR_INGEST_CHUNK_SIZE", dotenv, ingest_yml.get("chunk_size", 600)
+        ),
+        chunk_overlap=_resolve_int(
+            "VECTOR_INGEST_CHUNK_OVERLAP", dotenv, ingest_yml.get("chunk_overlap", 80)
+        ),
+        batch_size=_resolve_int(
+            "VECTOR_INGEST_BATCH_SIZE", dotenv, ingest_yml.get("batch_size", 64)
+        ),
+    )
+
+    vector = VectorSettings(provider=provider, qdrant=qdrant, ingest=ingest)
+
+    # Assemble SecuritySettings — only from env, never from YAML
+    internal_token = _resolve_env("FASTAPI_INTERNAL_TOKEN", dotenv)
+    security = SecuritySettings(internal_token=internal_token)
+
     # Assemble PromptSettings — every field supports env override
     prompts = PromptSettings(
         prompts_dir=_resolve_str("PROMPTS_DIR", dotenv, prompts_yml.get("prompts_dir")),
@@ -207,9 +249,11 @@ def load_settings() -> AppSettings:
     settings = AppSettings(
         server=server,
         model=model,
+        vector=vector,
         chroma=chroma,
         rag=rag,
         prompts=prompts,
+        security=security,
         project_root=_PROJECT_ROOT,
     )
 
