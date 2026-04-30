@@ -78,7 +78,10 @@ def ensure_qdrant_collection(
 ) -> None:
     """Create the Qdrant collection if it does not exist.
 
-    Safe to call on every startup — uses exists() check.
+    If the collection already exists, validates that its vector size
+    matches the configured value. A mismatch indicates the embedding
+    model output dimension and the collection schema are out of sync
+    and must be resolved before proceeding.
     """
     client = get_qdrant_client()
 
@@ -90,9 +93,36 @@ def ensure_qdrant_collection(
     distance_enum = distance_map.get(distance, Distance.COSINE)
 
     if client.collection_exists(collection_name):
+        info = client.get_collection(collection_name)
+        vectors = info.config.params.vectors
+
+        if isinstance(vectors, dict):
+            existing_sizes = [v.size for v in vectors.values()]
+            if any(s != vector_size for s in existing_sizes):
+                raise RuntimeError(
+                    f"Qdrant collection vector size mismatch: "
+                    f"configured={vector_size}, existing={existing_sizes}. "
+                    f"Please recreate collection or use a matching embedding "
+                    f"configuration."
+                )
+            existing_size_display = existing_sizes
+        else:
+            existing_size = vectors.size
+            existing_size_display = existing_size
+            if existing_size != vector_size:
+                raise RuntimeError(
+                    f"Qdrant collection vector size mismatch: "
+                    f"configured={vector_size}, existing={existing_size}. "
+                    f"Please recreate collection or use a matching embedding "
+                    f"configuration."
+                )
+
         logger.info(
-            "[qdrant_client] Collection '%s' already exists, skipping creation",
+            "[qdrant_client] Collection '%s' already exists (size=%s, distance=%s), "
+            "skipping creation",
             collection_name,
+            existing_size_display,
+            distance,
         )
         return
 

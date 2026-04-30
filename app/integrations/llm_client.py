@@ -12,16 +12,16 @@ making it easy to switch between DashScope, SiliconFlow, DeepSeek, etc.
 
 import logging
 
-from langchain_community.embeddings import DashScopeEmbeddings
 from langchain_openai import ChatOpenAI
 
 from app.config import settings
+from app.integrations.embedding_client import DashScopeEmbeddingClient
 
 logger = logging.getLogger("rag-agent.llm_client")
 
 _agent_model: ChatOpenAI | None = None
 _streaming_model: ChatOpenAI | None = None
-_embed_model: DashScopeEmbeddings | None = None
+_embed_model: DashScopeEmbeddingClient | None = None
 
 
 def get_agent_model() -> ChatOpenAI:
@@ -70,15 +70,18 @@ def get_streaming_model() -> ChatOpenAI:
     return _streaming_model
 
 
-def get_embed_model() -> DashScopeEmbeddings:
-    """DashScope embedding model for vector store operations."""
+def get_embed_model() -> DashScopeEmbeddingClient:
+    """Embedding client for vector store operations.
+
+    Uses DashScopeEmbeddingClient instead of DashScopeEmbeddings so that
+    the ``dimensions`` parameter is explicitly set in every API request,
+    matching the configured Qdrant vector_size.
+    """
     global _embed_model
     if _embed_model is None:
-        logger.info(
-            "[llm_client] Initializing embedding model: %s",
-            settings.model.embedding_model_name,
-        )
-        _embed_model = DashScopeEmbeddings(
-            model=settings.model.embedding_model_name
+        _embed_model = DashScopeEmbeddingClient(
+            model=settings.model.embedding_model_name,
+            api_key=settings.model.dashscope_api_key.get_secret_value(),
+            dimensions=settings.vector.qdrant.vector_size,
         )
     return _embed_model

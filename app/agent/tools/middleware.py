@@ -5,8 +5,9 @@ points in the agent loop:
 
 - monitor_tool: wraps every tool call, injects request context,
   emits tool_start/tool_done events via AgentEventSink, and logs
-  tool invocation results.
-- log_before_model: fires before each LLM call for observability.
+  tool invocation results with elapsed times.
+- log_before_model: fires before each LLM call for observability,
+  records model start timing for downstream duration tracking.
 - report_prompt_switch: dynamically selects system prompt based on
   whether the request is a report generation or a normal chat.
 """
@@ -27,7 +28,10 @@ from langgraph.runtime import Runtime
 from langgraph.types import Command
 
 from app.agent.tools.request_context import (
+    clear_perf_request_id,
     clear_request_context,
+    get_request_context,
+    set_perf_request_id,
     set_request_context,
 )
 from app.services.stream_events import (
@@ -35,9 +39,46 @@ from app.services.stream_events import (
     tool_done_event,
     tool_start_event,
 )
+from app.utils.perf import elapsed_ms, log_perf, now_ms
 from app.utils.prompt_loader import load_report_prompts, load_system_prompts
 
 logger = logging.getLogger("rag-agent.middleware")
+
+
+def emit_pending_model_done(context: dict) -> None:
+    """Emit a pending model done log from a plain context dict.
+
+    Used by ``ReactAgent.execute()`` after ``agent.invoke()`` returns
+    so that the final model round (which has no subsequent tool call)
+    still produces a matching ``[perf][agent_model] done`` event.
+
+    Safe to call multiple times — clears ``_model_start`` on success.
+    """
+    if "_model_start" not in context:
+        return
+
+    model_elapsed = elapsed_ms(context.pop("_model_start"))
+    step = context.pop("_perf_step", 0)
+    request_id = context.get("request_id", "internal")
+
+    log_perf("agent_model", "done",
+             request_id=request_id,
+             status="success",
+             step=step,
+             elapsed_ms=model_elapsed)
+
+
+def _emit_model_done(runtime: Runtime) -> None:
+    """Emit a model done perf log if a model start was recorded.
+
+    Reads ``_model_start`` and ``_perf_step`` from the runtime context,
+    computes elapsed time, and logs the event. Clears the tracking
+    values afterwards to prevent double-emit.
+
+    This is the runtime-context wrapper called from monitor_tool before
+    each tool invocation.
+    """
+    emit_pending_model_done(runtime.context)
 
 
 @wrap_tool_call
@@ -50,7 +91,9 @@ def monitor_tool(
     - Injects the runtime context (e.g. user_id, month, report flag)
       into thread-local storage so tools can access it.
     - Emits tool_start / tool_done events via AgentEventSink when present.
-    - Logs the tool name, arguments, and result status.
+    - Logs performance metrics with elapsed_ms per tool call.
+    - Propagates ``request_id`` to the worker thread so deep layers
+      (embedding, Qdrant) can read it via ``get_perf_request_id()``.
     - Sets context["report"] = True when fill_context_for_report is called,
       which triggers the report system prompt in subsequent LLM calls.
     """
@@ -62,6 +105,21 @@ def monitor_tool(
     ctx = dict(request.runtime.context)
     set_request_context(ctx)
 
+    request_id = ctx.get("request_id", "internal")
+    set_perf_request_id(request_id)
+
+    query_trunc = str(tool_args.get("query", ""))[:80] if isinstance(tool_args, dict) else ""
+
+    # Emit model_done before tool_start so the sequence is:
+    #   model start -> model done -> tool start -> tool done
+    _emit_model_done(request.runtime)
+
+    log_perf("agent_tool", "start",
+             request_id=request_id,
+             status="start",
+             tool_name=tool_name,
+             query=query_trunc if query_trunc else None)
+
     # Emit tool_start event via event sink (V2)
     sink = ctx.get("event_sink")
     if sink is not None:
@@ -72,10 +130,15 @@ def monitor_tool(
             )
         )
 
+    tool_start = now_ms()
+
     try:
         result = handler(request)
+        tool_elapsed = elapsed_ms(tool_start)
         logger.info(
-            "[middleware] Tool %s completed successfully", tool_name
+            "[middleware] Tool %s completed successfully (elapsed=%dms)",
+            tool_name,
+            tool_elapsed,
         )
 
         # Flag report mode after the context-filling tool is called
@@ -92,21 +155,62 @@ def monitor_tool(
                 )
             )
 
+        log_perf("agent_tool", "done",
+                 request_id=request_id,
+                 status="success",
+                 tool_name=tool_name,
+                 elapsed_ms=tool_elapsed)
+
         return result
     except Exception as e:
+        tool_elapsed = elapsed_ms(tool_start)
+        log_perf("agent_tool", "error",
+                 request_id=request_id,
+                 status="failed",
+                 tool_name=tool_name,
+                 elapsed_ms=tool_elapsed,
+                 error_code="TOOL_ERROR",
+                 error=str(e)[:80])
         logger.error(
-            "[middleware] Tool %s failed: %s", tool_name, e, exc_info=True
+            "[middleware] Tool %s failed after %dms: %s",
+            tool_name,
+            tool_elapsed,
+            e,
+            exc_info=True,
         )
         raise
     finally:
         clear_request_context()
+        clear_perf_request_id()
 
 
 @before_model
 def log_before_model(state: AgentState, runtime: Runtime):
-    """Log a summary before each LLM call within the agent loop."""
+    """Log a summary before each LLM call within the agent loop.
+
+    Records the model start timestamp and step number in the runtime
+    context so that ``monitor_tool`` (or ``emit_pending_model_done``
+    from ``ReactAgent.execute``) can compute the model elapsed time
+    and emit ``[perf][agent_model] done``.
+    """
     msg_count = len(state["messages"])
     last_msg = state["messages"][-1]
+    request_id = runtime.context.get("request_id", "internal")
+
+    # Track step count via runtime context
+    step = runtime.context.get("_perf_step", 0) + 1
+    runtime.context["_perf_step"] = step
+
+    # Record model start time so downstream can compute elapsed
+    runtime.context["_model_start"] = now_ms()
+
+    log_perf("agent_model", "start",
+             request_id=request_id,
+             status="start",
+             step=step,
+             message_count=msg_count,
+             last=type(last_msg).__name__)
+
     logger.info(
         "[middleware] Before model: %d messages, last=%s",
         msg_count,

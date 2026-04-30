@@ -14,12 +14,14 @@ import logging
 from fastapi import APIRouter
 from sse_starlette.sse import EventSourceResponse
 
+from app.agent.tools.request_context import set_perf_request_id
 from app.common.exceptions import AgentGenerationError
 from app.common.response import ErrorCode
 from app.schemas.report import ReportRequest
 from app.services.report_service import get_report_service
 from app.services.stream_events import done_event, error_event
 from app.services.session_service import get_session_service
+from app.utils.perf import elapsed_ms, log_perf, now_ms
 
 logger = logging.getLogger("rag-agent.report_api")
 router = APIRouter()
@@ -52,12 +54,21 @@ async def report_stream(req: ReportRequest):
     else:
         query = "给我生成我的使用报告"
 
+    request_id = req.request_id or session_id
+    set_perf_request_id(request_id)
+
     logger.info(
         "[report/stream] SSE request: session=%s, user_id=%s, month=%s",
         session_id,
         req.user_id,
         req.month,
     )
+
+    sse_start = now_ms()
+    log_perf("report_api", "sse_start",
+             request_id=request_id,
+             session_id=session_id,
+             query_len=len(query))
 
     async def event_generator():
         try:
@@ -67,11 +78,17 @@ async def report_stream(req: ReportRequest):
                 user_id=req.user_id,
                 month=req.month,
                 device_id=req.device_id,
+                request_id=request_id,
             ):
                 yield {
                     "event": event["event"],
                     "data": json.dumps(event["data"], ensure_ascii=False),
                 }
+
+            log_perf("report_api", "sse_done",
+                     request_id=request_id,
+                     session_id=session_id,
+                     elapsed_ms=elapsed_ms(sse_start))
 
             logger.info(
                 "[report/stream] SSE done: session=%s", session_id
@@ -83,6 +100,11 @@ async def report_stream(req: ReportRequest):
                 "data": json.dumps(ev["data"], ensure_ascii=False),
             }
         except AgentGenerationError:
+            log_perf("report_api", "sse_error",
+                     request_id=request_id,
+                     session_id=session_id,
+                     elapsed_ms=elapsed_ms(sse_start),
+                     error="AgentGenerationError")
             logger.error(
                 "[report/stream] Report generation failed: session=%s",
                 session_id,
@@ -95,6 +117,11 @@ async def report_stream(req: ReportRequest):
                 "data": json.dumps(ev["data"], ensure_ascii=False),
             }
         except Exception as e:
+            log_perf("report_api", "sse_error",
+                     request_id=request_id,
+                     session_id=session_id,
+                     elapsed_ms=elapsed_ms(sse_start),
+                     error=str(e)[:80])
             logger.error(
                 "[report/stream] Unexpected error: session=%s, %s",
                 session_id,

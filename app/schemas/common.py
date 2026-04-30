@@ -31,12 +31,15 @@ class AgentExecutionResult(BaseModel):
             intended as a draft for the streaming phase to refine.
         tool_context: Concatenated ToolMessage contents collected during
             execution, providing factual context for the final answer.
-        used_tools: Names of tools invoked during this execution.
+        used_tools: Unique names of tools invoked during this execution.
+        tool_call_count: Total number of ToolMessage records, including
+            repeated calls to the same tool.
         messages: Full message history from the Agent run, useful for
             debugging and auditing.
     """
 
     final_draft: str
     tool_context: str
-    used_tools: list[str]
-    messages: list
+    used_tools: list[str] = Field(default_factory=list)
+    tool_call_count: int = 0
+    messages: list = Field(default_factory=list)

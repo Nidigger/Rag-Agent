@@ -20,6 +20,10 @@ class FakeVectorStore(VectorStore):
         self.deleted: list[str] = []
         self.disabled: list[str] = []
 
+    @property
+    def collection_name(self) -> str:
+        return "fake_collection"
+
     def ensure_collection(self) -> None:
         pass
 

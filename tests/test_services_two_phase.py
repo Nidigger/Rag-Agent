@@ -35,7 +35,7 @@ def _make_agent_result(
 def _make_fake_streamer(chunks):
     """Create a fake streamer whose stream_final_answer yields given chunks."""
 
-    def fake_stream(query, tool_context, final_draft=None, report=False):
+    def fake_stream(query, tool_context, final_draft=None, report=False, **kwargs):
         for c in chunks:
             yield {"event": "message", "data": {"content": c}}
 
@@ -171,7 +171,7 @@ class TestReportServiceTwoPhase:
 
         captured_report = None
 
-        def fake_stream(query, tool_context, final_draft=None, report=False):
+        def fake_stream(query, tool_context, final_draft=None, report=False, **kwargs):
             nonlocal captured_report
             captured_report = report
             yield {"event": "message", "data": {"content": "report_chunk"}}

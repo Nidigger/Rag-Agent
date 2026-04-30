@@ -31,6 +31,7 @@ from app.schemas.knowledge import (
     IngestRequest,
     IngestResponse,
 )
+from app.storage import get_storage
 
 logger = logging.getLogger("rag-agent.knowledge_api")
 router = APIRouter()
@@ -109,32 +110,56 @@ async def ingest_document(
 ):
     """Ingest a document into the vector store.
 
+    Supports two modes:
+      - **file_path**: Local file path (validated for safety).
+      - **storage**: Object storage reference (e.g. MinIO). The object is
+        downloaded to a temporary file, processed, and cleaned up.
+
     Spring Boot not yet implemented — this endpoint serves as both
     the developer-facing and future Spring Boot internal endpoint.
     """
+    local_ref = None
     try:
         vector_store = _get_vector_store()
 
         if not vector_store.health_check():
             raise VectorStoreUnavailableError()
 
-        _validate_file_path(req.file_path)
+        if req.file_path:
+            _validate_file_path(req.file_path)
+            file_path = req.file_path
+            source = Path(req.file_path).name
 
-        if not os.path.exists(req.file_path):
-            raise DocumentNotFoundError(
-                f"File not found: {req.file_path}"
+            if not os.path.exists(file_path):
+                raise DocumentNotFoundError(
+                    f"File not found: {file_path}"
+                )
+        else:
+            bucket = req.storage.bucket or settings.storage.minio_bucket
+            if not bucket:
+                raise IngestFailedError(
+                    "MinIO bucket is not configured; pass storage.bucket "
+                    "or set MINIO_BUCKET"
+                )
+
+            local_ref = get_storage(req.storage.provider).download_to_temp(
+                bucket=bucket,
+                object_key=req.storage.object_key,
             )
+            file_path = local_ref.path
+            source = req.storage.file_name or local_ref.filename
 
         ingest_service = IngestService(vector_store)
 
         result = await asyncio.to_thread(
             ingest_service.ingest_file,
-            file_path=req.file_path,
+            file_path=file_path,
             document_id=req.document_id or document_id,
             document_version_id=req.document_version_id,
             file_hash=req.file_hash,
             knowledge_base_id=req.knowledge_base_id,
             tenant_id=req.tenant_id,
+            source=source,
         )
 
         logger.info(
@@ -150,6 +175,9 @@ async def ingest_document(
     except Exception as e:
         logger.error("[knowledge_api] Ingest failed: %s", e, exc_info=True)
         raise IngestFailedError(str(e))
+    finally:
+        if local_ref and local_ref.should_cleanup:
+            Path(local_ref.path).unlink(missing_ok=True)
 
 
 @router.delete("/documents/{document_id}/vectors")

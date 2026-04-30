@@ -11,6 +11,7 @@ import uuid as uuid_lib
 from langchain_core.documents import Document
 from qdrant_client.models import FieldCondition, Filter, MatchValue, PointStruct
 
+from app.agent.tools.request_context import get_request_context
 from app.config import settings
 from app.integrations.llm_client import get_embed_model
 from app.integrations.qdrant_client import ensure_qdrant_collection, get_qdrant_client
@@ -19,6 +20,7 @@ from app.rag.vector_store_base import (
     VectorChunk,
     VectorStore,
 )
+from app.utils.perf import elapsed_ms, log_perf, now_ms
 
 logger = logging.getLogger("rag-agent.qdrant_vector_store")
 
@@ -43,15 +45,28 @@ class QdrantVectorStore(VectorStore):
         return self._collection_name
 
     def ensure_collection(self) -> None:
+        request_id = get_request_context().get("request_id", "internal")
+
+        ensure_start = now_ms()
         ensure_qdrant_collection(
             collection_name=self._collection_name,
             vector_size=self._vector_size,
             distance=self._distance,
         )
 
+        log_perf("qdrant", "ensure_collection_done",
+                 request_id=request_id,
+                 status="success",
+                 elapsed_ms=elapsed_ms(ensure_start),
+                 collection=self._collection_name,
+                 vector_size=self._vector_size)
+
     def upsert_chunks(self, chunks: list[VectorChunk]) -> None:
         if not chunks:
             return
+
+        request_id = get_request_context().get("request_id", "internal")
+        upsert_start = now_ms()
 
         points = []
         for chunk in chunks:
@@ -73,6 +88,13 @@ class QdrantVectorStore(VectorStore):
             points=points,
             wait=True,
         )
+        upsert_elapsed = elapsed_ms(upsert_start)
+        log_perf("qdrant", "upsert_done",
+                 request_id=request_id,
+                 status="success",
+                 collection=self._collection_name,
+                 chunk_count=len(points),
+                 duration_ms=upsert_elapsed)
         logger.info(
             "[qdrant_vector_store] Upserted %d chunks into '%s'",
             len(points),
@@ -85,16 +107,28 @@ class QdrantVectorStore(VectorStore):
         top_k: int,
         filters: dict | None = None,
     ) -> list[RetrievedChunk]:
+        request_id = get_request_context().get("request_id", "internal")
+
         query_vector = self._embed_model.embed_query(query)
 
         qdrant_filter = None
+        filter_keys = []
         if filters:
+            filter_keys = list(filters.keys())
             conditions = [
                 FieldCondition(key=k, match=MatchValue(value=v))
                 for k, v in filters.items()
             ]
             qdrant_filter = Filter(must=conditions)
 
+        log_perf("qdrant", "search_start",
+                 request_id=request_id,
+                 status="start",
+                 collection=self._collection_name,
+                 top_k=top_k,
+                 filters=",".join(filter_keys) if filter_keys else "none")
+
+        search_start = now_ms()
         response = self._client.query_points(
             collection_name=self._collection_name,
             query=query_vector,
@@ -102,7 +136,15 @@ class QdrantVectorStore(VectorStore):
             query_filter=qdrant_filter,
             with_payload=True,
         )
+        search_elapsed = elapsed_ms(search_start)
         results = response.points
+
+        log_perf("qdrant", "search_done",
+                 request_id=request_id,
+                 status="success",
+                 collection=self._collection_name,
+                 duration_ms=search_elapsed,
+                 result_count=len(results))
 
         chunks = []
         for result in results:
@@ -145,6 +187,8 @@ class QdrantVectorStore(VectorStore):
         return documents
 
     def delete_document(self, document_id: str) -> None:
+        request_id = get_request_context().get("request_id", "internal")
+        delete_start = now_ms()
         self._client.delete(
             collection_name=self._collection_name,
             points_selector=Filter(
@@ -156,6 +200,12 @@ class QdrantVectorStore(VectorStore):
                 ]
             ),
         )
+        log_perf("qdrant", "delete_done",
+                 request_id=request_id,
+                 status="success",
+                 collection=self._collection_name,
+                 document_id=document_id,
+                 duration_ms=elapsed_ms(delete_start))
         logger.info(
             "[qdrant_vector_store] Deleted all points for document_id='%s'",
             document_id,
@@ -163,6 +213,8 @@ class QdrantVectorStore(VectorStore):
 
     def disable_document(self, document_id: str) -> None:
         """Set enabled=false for all chunks of a document (logical delete)."""
+        request_id = get_request_context().get("request_id", "internal")
+        disable_start = now_ms()
         self._client.set_payload(
             collection_name=self._collection_name,
             payload={"enabled": False},
@@ -176,6 +228,12 @@ class QdrantVectorStore(VectorStore):
             ),
             wait=True,
         )
+        log_perf("qdrant", "disable_done",
+                 request_id=request_id,
+                 status="success",
+                 collection=self._collection_name,
+                 document_id=document_id,
+                 duration_ms=elapsed_ms(disable_start))
         logger.info(
             "[qdrant_vector_store] Disabled document_id='%s'", document_id
         )

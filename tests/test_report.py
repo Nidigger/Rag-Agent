@@ -17,7 +17,7 @@ class MockReportService:
         ]
 
     async def stream_report(
-        self, query, session_id=None, user_id=None, month=None, device_id=None
+        self, query, session_id=None, user_id=None, month=None, device_id=None, request_id=None
     ):
         for event in self._events:
             yield event

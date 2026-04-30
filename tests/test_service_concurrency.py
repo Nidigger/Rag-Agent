@@ -52,7 +52,7 @@ class FakeStreamer:
     def __init__(self, chunks):
         self.chunks = chunks
 
-    def stream_final_answer(self, query, tool_context, final_draft=None, report=False):
+    def stream_final_answer(self, query, tool_context, final_draft=None, report=False, **kwargs):
         for c in self.chunks:
             yield c
 

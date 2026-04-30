@@ -13,7 +13,7 @@ class MockChatService:
             {"event": "message", "data": {"content": "World"}},
         ]
 
-    async def stream_chat(self, query, session_id=None, messages=None):
+    async def stream_chat(self, query, session_id=None, messages=None, request_id=None):
         for event in self._events:
             yield event
 
@@ -83,7 +83,7 @@ async def test_chat_non_stream(client):
 async def test_chat_stream_error_event(client):
     mock_service = MockChatService()
 
-    async def error_gen(query, session_id=None, messages=None):
+    async def error_gen(query, session_id=None, messages=None, request_id=None):
         raise RuntimeError("model failed")
         yield
 

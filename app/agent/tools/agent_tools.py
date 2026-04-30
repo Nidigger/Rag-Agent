@@ -17,6 +17,7 @@ from app.agent.tools.request_context import get_request_context
 from app.config import settings
 from app.rag.retriever import RagSummarizeService
 from app.utils.path_tool import get_abs_path
+from app.utils.perf import elapsed_ms, log_perf, now_ms
 
 logger = logging.getLogger("rag-agent.agent_tools")
 
@@ -40,8 +41,26 @@ def _get_rag_service() -> RagSummarizeService:
 @tool(description="从向量存储中检索参考资料")
 def rag_summarize(query: str) -> str:
     """Query the vector store for relevant document chunks."""
+    request_id = get_request_context().get("request_id", "internal")
+
     logger.info("[tool] rag_summarize: query=%r", query[:80])
-    return _get_rag_service().rag_summarize(query)
+
+    tool_start = now_ms()
+    log_perf("rag_tool", "start",
+             request_id=request_id,
+             query=query[:80],
+             top_k=3,
+             kb="kb_default")
+
+    result = _get_rag_service().rag_summarize(query=query, request_id=request_id)
+
+    tool_elapsed = elapsed_ms(tool_start)
+    log_perf("rag_tool", "done",
+             request_id=request_id,
+             elapsed_ms=tool_elapsed,
+             result_len=len(result))
+
+    return result
 
 
 @tool(description="获取指定城市的天气，以消息字符串的形式返回")

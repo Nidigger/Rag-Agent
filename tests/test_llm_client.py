@@ -3,17 +3,17 @@
 Validates that:
 - get_agent_model() returns ChatOpenAI with streaming=False.
 - get_streaming_model() returns ChatOpenAI with streaming=True.
-- get_embed_model() returns DashScopeEmbeddings.
+- get_embed_model() returns DashScopeEmbeddingClient.
 - Each function returns the same instance on repeated calls (singleton).
-- Both models use the configured base_url and api_key.
+- Both chat models use the configured base_url and api_key.
 """
 
 import pytest
-from langchain_community.embeddings import DashScopeEmbeddings
 from langchain_openai import ChatOpenAI
 
 from app.config import settings
 from app.integrations import llm_client
+from app.integrations.embedding_client import DashScopeEmbeddingClient
 
 
 class TestGetAgentModel:
@@ -60,11 +60,19 @@ class TestGetStreamingModel:
 
 
 class TestGetEmbedModel:
-    def test_returns_dashscope_embeddings(self):
+    def test_returns_dashscope_embedding_client(self):
         model = llm_client.get_embed_model()
-        assert isinstance(model, DashScopeEmbeddings)
+        assert isinstance(model, DashScopeEmbeddingClient)
 
     def test_singleton(self):
         model1 = llm_client.get_embed_model()
         model2 = llm_client.get_embed_model()
         assert model1 is model2
+
+    def test_model_name_matches_config(self):
+        model = llm_client.get_embed_model()
+        assert model.model == settings.model.embedding_model_name
+
+    def test_dimensions_match_qdrant_vector_size(self):
+        model = llm_client.get_embed_model()
+        assert model.dimensions == settings.vector.qdrant.vector_size

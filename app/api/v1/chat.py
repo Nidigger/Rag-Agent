@@ -14,12 +14,14 @@ import logging
 from fastapi import APIRouter
 from sse_starlette.sse import EventSourceResponse
 
+from app.agent.tools.request_context import set_perf_request_id
 from app.common.exceptions import AgentGenerationError
 from app.common.response import ErrorCode, success
 from app.schemas.chat import ChatRequest
 from app.services.chat_service import get_chat_service
 from app.services.stream_events import done_event, error_event
 from app.services.session_service import get_session_service
+from app.utils.perf import elapsed_ms, log_perf, now_ms
 
 logger = logging.getLogger("rag-agent.chat_api")
 router = APIRouter()
@@ -94,11 +96,20 @@ async def chat_stream(req: ChatRequest):
     history = session_service.get_messages(session_id)
     history_for_agent = history[:-1] if len(history) > 1 else []
 
+    request_id = req.request_id or session_id
+    set_perf_request_id(request_id)
+
     logger.info(
         "[chat/stream] SSE request: session=%s, message=%r",
         session_id,
         req.message[:80],
     )
+
+    sse_start = now_ms()
+    log_perf("chat_api", "sse_start",
+             request_id=request_id,
+             session_id=session_id,
+             message_len=len(req.message))
 
     async def event_generator():
         collected_chunks: list[str] = []
@@ -107,6 +118,7 @@ async def chat_stream(req: ChatRequest):
                 query=req.message,
                 session_id=session_id,
                 messages=history_for_agent,
+                request_id=request_id,
             ):
                 if event["event"] == "message":
                     collected_chunks.append(event["data"]["content"])
@@ -121,6 +133,12 @@ async def chat_stream(req: ChatRequest):
             if reply:
                 session_service.add_message(session_id, "assistant", reply)
 
+            log_perf("chat_api", "sse_done",
+                     request_id=request_id,
+                     session_id=session_id,
+                     elapsed_ms=elapsed_ms(sse_start),
+                     reply_len=len(reply))
+
             logger.info(
                 "[chat/stream] SSE done: session=%s, reply_len=%d",
                 session_id,
@@ -133,6 +151,11 @@ async def chat_stream(req: ChatRequest):
                 "data": json.dumps(ev["data"], ensure_ascii=False),
             }
         except AgentGenerationError as e:
+            log_perf("chat_api", "sse_error",
+                     request_id=request_id,
+                     session_id=session_id,
+                     elapsed_ms=elapsed_ms(sse_start),
+                     error=str(e)[:80])
             logger.error(
                 "[chat/stream] Agent generation failed: session=%s, %s",
                 session_id,
@@ -146,6 +169,11 @@ async def chat_stream(req: ChatRequest):
                 "data": json.dumps(ev["data"], ensure_ascii=False),
             }
         except Exception as e:
+            log_perf("chat_api", "sse_error",
+                     request_id=request_id,
+                     session_id=session_id,
+                     elapsed_ms=elapsed_ms(sse_start),
+                     error=str(e)[:80])
             logger.error(
                 "[chat/stream] Unexpected error: session=%s, %s",
                 session_id,

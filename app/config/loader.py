@@ -24,6 +24,7 @@ from app.config.schema import (
     RagSettings,
     SecuritySettings,
     ServerSettings,
+    StorageSettings,
     VectorSettings,
 )
 
@@ -232,6 +233,16 @@ def load_settings() -> AppSettings:
     internal_token = _resolve_env("FASTAPI_INTERNAL_TOKEN", dotenv)
     security = SecuritySettings(internal_token=internal_token)
 
+    # Assemble StorageSettings — MinIO object storage
+    storage = StorageSettings(
+        provider=_resolve_str("STORAGE_PROVIDER", dotenv, "minio"),
+        minio_endpoint=_resolve_str("MINIO_ENDPOINT", dotenv, ""),
+        minio_bucket=_resolve_str("MINIO_BUCKET", dotenv, ""),
+        minio_access_key=_resolve_str("MINIO_ACCESS_KEY", dotenv, ""),
+        minio_secret_key=_resolve_str("MINIO_SECRET_KEY", dotenv, ""),
+        minio_secure=_resolve_bool("MINIO_SECURE", dotenv, False),
+    )
+
     # Assemble PromptSettings — every field supports env override
     prompts = PromptSettings(
         prompts_dir=_resolve_str("PROMPTS_DIR", dotenv, prompts_yml.get("prompts_dir")),
@@ -254,6 +265,7 @@ def load_settings() -> AppSettings:
         rag=rag,
         prompts=prompts,
         security=security,
+        storage=storage,
         project_root=_PROJECT_ROOT,
     )
 

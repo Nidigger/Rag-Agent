@@ -1,4 +1,4 @@
-"""HTTP middleware — request ID tracking and response timing."""
+"""HTTP middleware — request ID tracking, context propagation, and response timing."""
 
 import time
 import uuid
@@ -12,10 +12,18 @@ from app.config import settings
 
 
 class RequestIDMiddleware(BaseHTTPMiddleware):
-    """Attach a unique request ID to every request/response cycle."""
+    """Attach a unique request ID and propagate tenant/user context."""
 
     async def dispatch(self, request: Request, call_next):
         request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
+        # Propagate downstream context headers into request.state so that
+        # API handlers and services can access them without parsing headers
+        # at every layer.
+        request.state.request_id = request_id
+        request.state.tenant_id = request.headers.get("X-Tenant-Id", "default")
+        request.state.user_id = request.headers.get("X-User-Id", "")
+        request.state.endpoint = request.url.path
+
         response = await call_next(request)
         response.headers["X-Request-ID"] = request_id
         return response

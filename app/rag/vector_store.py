@@ -43,6 +43,10 @@ class ChromaVectorStore(VectorStore):
             length_function=len,
         )
 
+    @property
+    def collection_name(self) -> str:
+        return settings.chroma.collection_name
+
     def ensure_collection(self) -> None:
         logger.info(
             "[chroma_vector_store] Using collection '%s' (persist: %s)",

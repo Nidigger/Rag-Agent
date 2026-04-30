@@ -101,6 +101,17 @@ class SecuritySettings(BaseModel):
     internal_token: SecretStr | None = None
 
 
+class StorageSettings(BaseModel):
+    """Object storage settings — MinIO or future providers."""
+
+    provider: str = "minio"
+    minio_endpoint: str = ""
+    minio_bucket: str = ""
+    minio_access_key: SecretStr = SecretStr("")
+    minio_secret_key: SecretStr = SecretStr("")
+    minio_secure: bool = False
+
+
 class AppSettings(BaseModel):
     """Top-level application settings — composed of domain groups.
 
@@ -122,4 +133,5 @@ class AppSettings(BaseModel):
     rag: RagSettings
     prompts: PromptSettings
     security: SecuritySettings
+    storage: StorageSettings
     project_root: Path

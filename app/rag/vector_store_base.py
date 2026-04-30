@@ -50,6 +50,12 @@ class VectorStore(ABC):
     enabling provider swaps without touching application logic.
     """
 
+    @property
+    @abstractmethod
+    def collection_name(self) -> str:
+        """The collection/table name used by this vector store."""
+        ...
+
     @abstractmethod
     def ensure_collection(self) -> None:
         """Create or verify the collection exists. Called at startup."""

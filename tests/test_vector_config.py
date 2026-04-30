@@ -62,6 +62,12 @@ class TestQdrantSettingsModel:
         assert s.vector_size == 1536
         assert s.timeout_seconds == 10
 
+    def test_qdrant_vector_size_is_1536(self):
+        from app.config import settings
+
+        assert settings.vector.qdrant.vector_size == 1536
+
+
 
 class TestVectorSettingsModel:
     def test_model_minimal(self):

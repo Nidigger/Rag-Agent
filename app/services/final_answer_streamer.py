@@ -12,6 +12,7 @@ import logging
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from app.integrations.llm_client import get_streaming_model
+from app.utils.perf import elapsed_ms, log_perf, now_ms
 
 logger = logging.getLogger("rag-agent.final_answer_streamer")
 
@@ -48,6 +49,7 @@ class FinalAnswerStreamer:
         tool_context: str,
         final_draft: str | None = None,
         report: bool = False,
+        request_id: str | None = None,
     ):
         """Stream the final answer as a sync generator of text tokens.
 
@@ -56,10 +58,12 @@ class FinalAnswerStreamer:
             tool_context: Concatenated tool results from the Agent phase.
             final_draft: Draft answer from the Agent, used as reference.
             report: If True, use report-style system prompt.
+            request_id: Request ID for performance logging.
 
         Yields:
             str: Text chunks (typically 1-3 tokens each) for SSE delivery.
         """
+        rid = request_id or "internal"
         system_prompt = _REPORT_SYSTEM_PROMPT if report else _CHAT_SYSTEM_PROMPT
 
         user_prompt = (
@@ -77,16 +81,36 @@ class FinalAnswerStreamer:
             len(final_draft or ""),
         )
 
+        log_perf("final_stream", "start",
+                 request_id=rid,
+                 report=report,
+                 draft_len=len(final_draft or ""),
+                 context_len=len(tool_context))
+
         messages = [
             SystemMessage(content=system_prompt),
             HumanMessage(content=user_prompt),
         ]
 
+        stream_start = now_ms()
+        first_token_yielded = False
+        output_len = 0
+
         for chunk in self._model.stream(messages):
             text = getattr(chunk, "content", "")
             if text:
+                if not first_token_yielded:
+                    log_perf("final_stream", "first_token",
+                             request_id=rid,
+                             elapsed_ms=elapsed_ms(stream_start))
+                    first_token_yielded = True
+                output_len += len(text)
                 yield text
 
+        log_perf("final_stream", "done",
+                 request_id=rid,
+                 elapsed_ms=elapsed_ms(stream_start),
+                 output_len=output_len)
         logger.info("[FinalAnswerStreamer] Stream finished")
 
 

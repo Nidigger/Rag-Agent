@@ -7,6 +7,8 @@ qdrant:
   url: http://192.168.31.104:6333
   collection_name: rag_agent_knowledge
   distance: Cosine
+  # Must match embedding output dimension.
+  # text-embedding-v4 defaults to 1024 unless dimensions=1536 is explicitly passed.
   vector_size: 1536
   timeout_seconds: 10
 

@@ -182,6 +182,112 @@ class TestReactAgentExecute:
 
         result = agent.execute("test")
         assert result.used_tools.count("get_weather") == 1
+        assert result.used_tools == ["get_weather"]
+
+    def test_execute_tool_call_count_reflects_raw_calls(self):
+        """Repeated tool calls should increment tool_call_count."""
+        messages = [
+            HumanMessage(content="test"),
+            AIMessage(content="", tool_calls=[
+                {"name": "get_weather", "args": {"city": "a"}, "id": "c1"},
+            ]),
+            ToolMessage(content="sunny", tool_call_id="c1", name="get_weather"),
+            AIMessage(content="", tool_calls=[
+                {"name": "get_weather", "args": {"city": "b"}, "id": "c2"},
+            ]),
+            ToolMessage(content="rainy", tool_call_id="c2", name="get_weather"),
+            AIMessage(content="Both cities checked."),
+        ]
+        agent = ReactAgent()
+        agent._agent = _FakeAgentInvoke(messages)
+
+        result = agent.execute("test")
+        # Used tools deduplicated — only 1 unique name
+        assert len(result.used_tools) == 1
+        # Raw tool_call_count includes both invocations
+        assert result.tool_call_count == 2
+
+    def test_execute_tool_call_count_multiple_unique(self):
+        """Three unique tools, each called once."""
+        messages = [
+            HumanMessage(content="test"),
+            AIMessage(content="", tool_calls=[
+                {"name": "rag_summarize", "args": {"query": "how to clean"}, "id": "c1"},
+            ]),
+            ToolMessage(content="clean tips", tool_call_id="c1", name="rag_summarize"),
+            AIMessage(content="", tool_calls=[
+                {"name": "get_weather", "args": {"city": "shenzhen"}, "id": "c2"},
+            ]),
+            ToolMessage(content="sunny", tool_call_id="c2", name="get_weather"),
+            AIMessage(content="", tool_calls=[
+                {"name": "get_user_location", "args": {}, "id": "c3"},
+            ]),
+            ToolMessage(content="shenzhen", tool_call_id="c3", name="get_user_location"),
+            AIMessage(content="Here is your report."),
+        ]
+        agent = ReactAgent()
+        agent._agent = _FakeAgentInvoke(messages)
+
+        result = agent.execute("test")
+        assert len(result.used_tools) == 3
+        assert result.tool_call_count == 3
+
+    def test_execute_tool_call_count_repeated_rag(self):
+        """rag_summarize called 4 times, get_weather once."""
+        messages = [
+            HumanMessage(content="test"),
+        ]
+        for i in range(4):
+            messages.append(AIMessage(content="", tool_calls=[
+                {"name": "rag_summarize", "args": {"query": f"q{i}"}, "id": f"c{i}"},
+            ]))
+            messages.append(ToolMessage(
+                content=f"result{i}", tool_call_id=f"c{i}", name="rag_summarize"
+            ))
+        messages.append(AIMessage(content="", tool_calls=[
+            {"name": "get_weather", "args": {"city": "sz"}, "id": "c_weather"},
+        ]))
+        messages.append(ToolMessage(
+            content="sunny", tool_call_id="c_weather", name="get_weather"
+        ))
+        messages.append(AIMessage(content="Final answer."))
+
+        agent = ReactAgent()
+        agent._agent = _FakeAgentInvoke(messages)
+
+        result = agent.execute("test")
+        # used_tools deduplicated: only 2 unique
+        assert len(result.used_tools) == 2
+        assert "rag_summarize" in result.used_tools
+        assert "get_weather" in result.used_tools
+        # tool_call_count = raw count
+        assert result.tool_call_count == 5
+
+
+class TestAgentHandlesToolMessageWithoutName:
+    """Regression: ToolMessage.name can be None in some LangChain scenarios."""
+
+    def test_execute_handles_tool_message_without_name(self):
+        messages = [
+            HumanMessage(content="test"),
+            AIMessage(
+                content="",
+                tool_calls=[
+                    {"name": "rag_summarize", "args": {"query": "x"}, "id": "c1"}
+                ],
+            ),
+            ToolMessage(content="result", tool_call_id="c1"),
+            AIMessage(content="done"),
+        ]
+        agent = ReactAgent()
+        agent._agent = _FakeAgentInvoke(messages)
+
+        result = agent.execute("test", context={"request_id": "req-no-tool-name"})
+
+        assert result.final_draft == "done"
+        assert result.tool_context == "result"
+        assert result.used_tools == ["unknown"]
+        assert result.tool_call_count == 1
 
 
 class TestMessageContentToText:

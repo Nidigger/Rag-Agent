@@ -120,10 +120,22 @@ class IngestService:
                 len(vector_chunks),
             )
 
+        chunks_detail = []
+        version_id = document_version_id or "0"
+        collection = self._vector_store.collection_name
+        for vc in vector_chunks:
+            chunks_detail.append({
+                "chunk_id": f"{document_id}:{version_id}:{vc.chunk_index}",
+                "qdrant_collection": collection,
+                "qdrant_point_id": vc.point_id,
+                "content_hash": vc.content_hash,
+            })
+
         return {
             "document_id": document_id,
             "chunk_count": len(vector_chunks),
             "status": "success",
+            "chunks": chunks_detail,
         }
 
     def delete_document_vectors(self, document_id: str) -> dict:
